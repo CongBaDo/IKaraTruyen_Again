@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ikaratruyen"
     android:versionCode="3"
-    android:versionName="3.1" >
+    android:versionName="1.0" >
+
     <!--  -->
     <uses-sdk android:minSdkVersion="11" />
 
@@ -25,6 +26,102 @@
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
+        android:name="com.ikaratruyen.IApplication"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true" >
+        <activity
+            android:name="com.ikaratruyen.activity.ISplashActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ikaratruyen.activity.IMainActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:theme="@style/Theme.Sherlock.Light.DarkActionBar"
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+        <activity
+            android:name="com.ikaratruyen.activity.IBookDetailActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.ikaratruyen.activity.IChapListActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.ikaratruyen.activity.IReaderActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.ikaratruyen.activity.INewReaderActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.yamin.reader.activity.CoreReadActivity"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"
+            android:uiOptions="splitActionBarWhenNarrow" >
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationName"
+            android:value="@string/facebook_app_name" />
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider410533232447889"
+            android:exported="true" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <service
+            android:name="com.ikaratruyen.utils.DownloadService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+
+        <provider
+            android:name="com.yamin.reader.database.BookContentProvider"
+            android:authorities="com.yamin.reader.BookContentProvider" />
+    </application>
+    <!--
+    <application
         android:name="org.geometerplus.android.fbreader.FBReaderApplication"
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
@@ -43,16 +140,16 @@
                   android:screenOrientation="portrait"
                   >
         </activity>
-        <!--  -->
+        
         <activity android:name=".activity.FileBrowserActivity"
             android:screenOrientation="portrait"
                   android:launchMode="singleTop">
-                <!-- Receives the search request. -->
+                Receives the search request.
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
-                <!-- No category needed, because the Intent will specify this class component-->
+                No category needed, because the Intent will specify this class component
             </intent-filter>
-            <!-- Points to searchable meta data. -->
+            Points to searchable meta data.
             <meta-data android:name="android.app.searchable"
                        android:resource="@xml/searchable" />
         </activity>
@@ -62,85 +159,9 @@
          <activity android:name=".activity.FileSearchResultActivity"
                    android:screenOrientation="portrait">
         </activity>
-         <!-- Points to searchable activity so the whole app can invoke search. -->
+         Points to searchable activity so the whole app can invoke search.
         <meta-data android:name="android.app.default_searchable"
                    android:value=".activity.FileBrowserActivity" />
-       <!--  <activity
-            android:name=".activity.CoreReadActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTop" >
-            <intent-filter>
-                <action android:name="android.easyreader.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="file" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="fbreader-action" />
-            </intent-filter>
-            <intent-filter>
-                <action   android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data     android:host=""
-                          android:scheme="file" />
-                <data android:pathPattern=".*\\.epub" />
-                <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.fb2" />
-                <data android:pathPattern=".*\\.fb2\\.zip" />
-                <data android:pathPattern=".*\\.mobi" />
-                <data android:pathPattern=".*\\.prc" />
-                <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.rtf" />
-            </intent-filter>
-            <intent-filter>
-                <action   android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-               <data
-                    android:host=""
-                    android:mimeType="text/plain"
-                    android:scheme="file" />
-                <data android:pathPattern=".*\\.epub" />
-                <data android:pathPattern=".*\\.oeb" />
-                <data android:pathPattern=".*\\.fb2" />
-                <data android:pathPattern=".*\\.mobi" />
-                <data android:pathPattern=".*\\.prc" />
-                <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.rtf" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:pathPattern=".*\\.fb2"
-                    android:scheme="content" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host=""
-                    android:scheme="file" />
-                <data android:mimeType="application/epub+zip" />
-                <data android:mimeType="application/x-pilot-prc" />
-                <data android:mimeType="application/x-mobipocket-ebook" />
-                <data android:mimeType="application/x-fictionbook+xml" />
-                <data android:mimeType="application/x-fictionbook" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity> -->
-        <!--  -->
         <activity
             android:name="org.geometerplus.android.fbreader.error.BookReadingErrorActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -153,7 +174,7 @@
                 <data android:scheme="BookReadingException" />
             </intent-filter>
         </activity>
-        <!--  -->
+        
         <activity
             android:name="org.geometerplus.android.fbreader.crash.MissingNativeLibraryActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -166,7 +187,7 @@
                 <data android:scheme="ExceptionInInitializerError" />
             </intent-filter>
         </activity>
-        <!--  -->
+        
         <service
             android:name="org.geometerplus.android.fbreader.api.ApiService"
             android:launchMode="singleTask" >
@@ -219,9 +240,8 @@
         <activity
             android:name="org.geometerplus.android.fbreader.preferences.PreferenceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-         <provider
-            android:name="com.yamin.reader.database.BookContentProvider"
-            android:authorities="com.yamin.reader.BookContentProvider" />
+         
     </application>
+    -->
 
 </manifest>

@@ -1,26 +1,10 @@
 package com.yamin.reader.activity;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.zip.ZipFile;
 
 import org.geometerplus.android.fbreader.NavigationPopup;
 import org.geometerplus.android.fbreader.PopupPanel;
-import org.geometerplus.android.fbreader.ProcessHyperlinkAction;
-import org.geometerplus.android.fbreader.RunPluginAction;
-import org.geometerplus.android.fbreader.SearchAction;
-import org.geometerplus.android.fbreader.SelectionBookmarkAction;
-import org.geometerplus.android.fbreader.SelectionCopyAction;
-import org.geometerplus.android.fbreader.SelectionHidePanelAction;
 import org.geometerplus.android.fbreader.SelectionPopup;
-import org.geometerplus.android.fbreader.SelectionShareAction;
-import org.geometerplus.android.fbreader.SelectionShowPanelAction;
-import org.geometerplus.android.fbreader.SetScreenOrientationAction;
-import org.geometerplus.android.fbreader.ShareBookAction;
-import org.geometerplus.android.fbreader.ShowBookmarksAction;
 import org.geometerplus.android.fbreader.ShowLibraryAction;
 import org.geometerplus.android.fbreader.ShowNavigationAction;
 import org.geometerplus.android.fbreader.ShowPreferencesAction;
@@ -28,13 +12,9 @@ import org.geometerplus.android.fbreader.ShowTOCAction;
 import org.geometerplus.android.fbreader.TextSearchPopup;
 import org.geometerplus.android.fbreader.api.ApiListener;
 import org.geometerplus.android.fbreader.api.ApiServerImplementation;
-import org.geometerplus.android.fbreader.api.PluginApi;
 import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
-import org.geometerplus.android.util.UIUtil;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
-import org.geometerplus.fbreader.book.Bookmark;
-import org.geometerplus.fbreader.book.SerializerUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.ChangeFontSizeAction;
@@ -43,7 +23,6 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBRreshAction;
 import org.geometerplus.fbreader.fbreader.SwitchProfileAction;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.library.ZLibrary;
 import org.geometerplus.zlibrary.core.options.ZLEnumOption;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
 import org.geometerplus.zlibrary.core.view.ZLView;
@@ -57,11 +36,7 @@ import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
 import android.app.Activity;
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -71,7 +46,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,23 +54,19 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ikaratruyen.R;
-import com.yamin.reader.adapter.PopGalleryAdapter;
-import com.yamin.reader.database.DbDataOperation;
+import com.ikaratruyen.utils.IkaraConstant;
 import com.yamin.reader.utils.ToolUtils;
 import com.yamin.reader.view.SwitchButton;
 
@@ -109,7 +79,7 @@ import com.yamin.reader.view.SwitchButton;
  * 
  */
 public class CoreReadActivity extends Activity {
-	private static final String TAg = "CoreReadActivity";
+	private static final String TAG = "CoreReadActivity";
 	
 	public static final String ACTION_OPEN_BOOK = "android.easyreader.action.VIEW";
 	public static final String BOOK_KEY = "esayreader.book";
@@ -127,10 +97,11 @@ public class CoreReadActivity extends Activity {
 	private ZLIntegerRangeOption option;
 	ZLEnumOption<ZLView.Animation>  animoption;
 	private boolean isNight = false;
+	private ImageView imgChangeState;
 	//
 	PopupWindow mPopuwindow;
-	private ImageView fontBigButton;
-	private ImageView fontSmallButton;
+	private TextView fontBigButton;
+	private TextView fontSmallButton;
 	private ImageView bookMoreButton;
 	private ImageView bookHomeButton;
 	private RelativeLayout topLL;
@@ -139,6 +110,7 @@ public class CoreReadActivity extends Activity {
 	private SwitchButton dayornightSwitch;
 	private ScrollView popuMenuLL;
 	private LinearLayout navigation_settings;
+	private int readerState = IkaraConstant.READER_STATE.NIGHT;
 	private Handler mHandler = new Handler() {
 
 		@Override
@@ -202,7 +174,7 @@ public class CoreReadActivity extends Activity {
 	private synchronized void openBook(Intent intent, Runnable action,
 			boolean force) {
 		
-		Log.i(TAg, "openBook");
+		Log.i(TAG, "openBook");
 		if (!force && myBook != null) {
 			return;
 		}
@@ -216,7 +188,7 @@ public class CoreReadActivity extends Activity {
 //						.getPath()));
 				String path = Environment.getExternalStorageDirectory().getAbsolutePath() +"/nemodotest.fb2";
 				File check = new File(path);
-				Log.e(TAg, "ALO "+check.exists()+" "+path);
+				Log.e(TAG, "ALO "+check.exists()+" "+path);
 				
 				this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
 //			}?
@@ -251,6 +223,7 @@ public class CoreReadActivity extends Activity {
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
+		Log.e(TAG, "onCreate");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.core_main);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
@@ -303,13 +276,14 @@ public class CoreReadActivity extends Activity {
 	public void initView() {
 		myRootView = (RelativeLayout) findViewById(R.id.root_view);
 		myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
-		//
+		imgChangeState = (ImageView)findViewById(R.id.img_change_state_reader);
+		
 		topLL = (RelativeLayout) findViewById(R.id.topMenuLL);
 		bottomLL = (LinearLayout) findViewById(R.id.bottomMenuLL);
-		bookMoreButton = (ImageView) findViewById(R.id.bookMoreButton);
-		fontBigButton = (ImageView) findViewById(R.id.fontsizeBigButton);
-		fontSmallButton = (ImageView) findViewById(R.id.fontsizeSmallButton);
-		bookHomeButton = (ImageView) findViewById(R.id.bookHomeButton);
+//		bookMoreButton = (ImageView) findViewById(R.id.bookMoreButton);
+		fontBigButton = (TextView) findViewById(R.id.tv_increase);
+		fontSmallButton = (TextView) findViewById(R.id.tv_decrease);
+//		bookHomeButton = (ImageView) findViewById(R.id.bookHomeButton);
 		//
 		if (myFBReaderApp.getColorProfileName() != null
 				&& myFBReaderApp.getColorProfileName().equals(
@@ -346,15 +320,49 @@ public class CoreReadActivity extends Activity {
 	}
 
 	private void setListener() {
-		bookMoreButton.setOnClickListener(new View.OnClickListener() {
-
+//		bookMoreButton.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				showPopupWindow(bookMoreButton);
+//				Log.i("MAIN", "onClick()");
+//			}
+//		});
+		imgChangeState.setOnClickListener(new View.OnClickListener() {
+			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showPopupWindow(bookMoreButton);
-				Log.i("MAIN", "onClick()");
+				
+				if(readerState == IkaraConstant.READER_STATE.DAY){
+					readerState = IkaraConstant.READER_STATE.NIGHT;
+					myFBReaderApp.runAction(
+							ActionCode.SWITCH_TO_NIGHT_PROFILE,
+							new SwitchProfileAction(myFBReaderApp,
+									ColorProfile.NIGHT));
+					Toast.makeText(CoreReadActivity.this, "夜间模式开启",
+							Toast.LENGTH_SHORT).show();
+					Message message = new Message();
+					message.what = NIGHT_UPDATEUI;
+					mHandler.sendMessage(message);
+					isNight = true;
+				}else{
+					readerState = IkaraConstant.READER_STATE.DAY;
+					myFBReaderApp.runAction(
+							ActionCode.SWITCH_TO_DAY_PROFILE,
+							new SwitchProfileAction(myFBReaderApp,
+									ColorProfile.DAY));
+					Toast.makeText(CoreReadActivity.this, "白天模式开启",
+							Toast.LENGTH_SHORT).show();
+					Message message = new Message();
+					message.what = DAY_UPDATEUI;
+					mHandler.sendMessage(message);
+					isNight = false;
+				}
 			}
 		});
+		
 		fontBigButton.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -377,14 +385,14 @@ public class CoreReadActivity extends Activity {
 				}
 			}
 		});
-		bookHomeButton.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				backPress();
-			}
-		});
+//		bookHomeButton.setOnClickListener(new View.OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				backPress();
+//			}
+//		});
 	}
 
 	@Override
@@ -416,6 +424,7 @@ public class CoreReadActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 
+		Log.e(TAG, "onStart");
 		getCollection().bindToService(this, new Runnable() {
 			public void run() {
 				new Thread() {
@@ -600,17 +609,17 @@ public class CoreReadActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-			//
-			backPress();
-			this.onBackPressed();
-			return true;
-		}
-		return (myMainView != null && myMainView.onKeyDown(keyCode, event))
-				|| super.onKeyDown(keyCode, event);
-	}
+//	@Override
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+//			//
+//			backPress();
+//			this.onBackPressed();
+//			return true;
+//		}
+//		return (myMainView != null && myMainView.onKeyDown(keyCode, event))
+//				|| super.onKeyDown(keyCode, event);
+//	}
 
 	private PowerManager.WakeLock myWakeLock;
 	private boolean myWakeLockToCreate;

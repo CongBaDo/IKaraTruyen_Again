@@ -24,6 +24,7 @@ import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWind
 import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
 
 import android.app.Application;
+import android.util.Log;
 
 public abstract class ZLAndroidApplication extends Application {
 	public ZLAndroidApplicationWindow myMainWindow;
@@ -31,6 +32,7 @@ public abstract class ZLAndroidApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.e("ZLAndroidApplication", "onCreate");
 		new ZLSQLiteConfig(this);
 		new ZLAndroidImageManager();
 		new ZLAndroidLibrary(this);

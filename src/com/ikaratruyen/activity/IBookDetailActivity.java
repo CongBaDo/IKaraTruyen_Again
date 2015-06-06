@@ -66,6 +66,7 @@ import com.ikaratruyen.utils.DownloadService;
 import com.ikaratruyen.utils.IKaraDbHelper;
 import com.ikaratruyen.utils.ISettings;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yamin.reader.activity.CoreReadActivity;
 import com.ikaratruyen.R;
 
 /**
@@ -414,7 +415,15 @@ public class IBookDetailActivity extends Activity implements
 			long id) {
 		// TODO Auto-generated method stub
 		
-		Intent intent = new Intent(getApplicationContext(), INewReaderActivity.class);
+//		Intent intent = new Intent(getApplicationContext(), INewReaderActivity.class);
+//		intent.putExtra("book_title", itemBook.title);
+//		intent.putExtra("chap_id", chapList.get(position)._id);
+//		intent.putExtra("chap_title", chapList.get(position).title);
+//		intent.putExtra("book_id", itemBook._id);
+//		intent.putExtra("chap_index", position);
+//		startActivity(intent);
+		
+		Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 		intent.putExtra("book_title", itemBook.title);
 		intent.putExtra("chap_id", chapList.get(position)._id);
 		intent.putExtra("chap_title", chapList.get(position).title);

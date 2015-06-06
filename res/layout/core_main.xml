@@ -12,8 +12,17 @@
         android:focusable="true"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical" />
-
+    
     <RelativeLayout
+        android:id="@+id/topMenuLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <include layout="@layout/top_bar_reader" />
+    </RelativeLayout>
+
+    <!-- <RelativeLayout
         android:id="@+id/topMenuLL"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -60,9 +69,20 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="2dip"
             android:src="@drawable/button_more_bg" />
-    </RelativeLayout>
+    </RelativeLayout> -->
+    
+     <LinearLayout
+        android:id="@+id/bottomMenuLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal" >
 
-    <LinearLayout
+        <include layout="@layout/bottom_reader" />
+    </LinearLayout>
+
+    <!-- <LinearLayout
         android:id="@+id/bottomMenuLL"
         android:layout_width="fill_parent"
         android:layout_height="36dip"
@@ -86,7 +106,7 @@
             android:layout_height="36dip"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.25"
-            android:src="@drawable/font_small_button_bg" />
+            android:src="@drawable/font_small_button_bg" /> -->
 
       <!--   <ImageView
             android:id="@+id/bookMarkButton"
@@ -104,6 +124,6 @@
             android:layout_weight="0.25"
             android:src="@drawable/menu_search" /> -->
          
-    </LinearLayout>
+    <!-- </LinearLayout> -->
 
 </RelativeLayout>
