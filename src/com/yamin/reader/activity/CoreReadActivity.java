@@ -50,6 +50,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,23 +63,21 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ikaratruyen.R;
+import com.ikaratruyen.activity.IChapListActivity;
 import com.ikaratruyen.utils.IkaraConstant;
 import com.yamin.reader.utils.ToolUtils;
 import com.yamin.reader.view.SwitchButton;
 
 /**
  * 
- * @ClassName: CoreReadActivity
- * @Description: TODO(这里用一句话描述这个类的作用) 基于开源的FBREADERJ1.8.2
- * @author ymcao
- * @date 2013-6-24 下午8:27:04
  * 
  */
-public class CoreReadActivity extends Activity {
+public class CoreReadActivity extends Activity implements OnSeekBarChangeListener, OnClickListener{
 	private static final String TAG = "CoreReadActivity";
 	
 	public static final String ACTION_OPEN_BOOK = "android.easyreader.action.VIEW";
@@ -95,21 +94,22 @@ public class CoreReadActivity extends Activity {
 	public static final int RESULT_REPAINT = RESULT_FIRST_USER + 1;
 	private static final String PLUGIN_ACTION_PREFIX = "___";
 	private ZLIntegerRangeOption option;
-	ZLEnumOption<ZLView.Animation>  animoption;
 	private boolean isNight = false;
 	private ImageView imgChangeState;
-	//
 	PopupWindow mPopuwindow;
 	private TextView fontBigButton;
 	private TextView fontSmallButton;
-	private ImageView bookMoreButton;
 	private ImageView bookHomeButton;
+	private SeekBar seek;
 	private RelativeLayout topLL;
 	private LinearLayout bottomLL;
 	private SeekBar brightness_slider;
 	private SwitchButton dayornightSwitch;
 	private ScrollView popuMenuLL;
+	private TextView tvChapIndex, tvIndex, tvQuyenIndex;
+	private TextView tvIncrease, tvDecrease, tvChapIndexTop;
 	private LinearLayout navigation_settings;
+	private String chapId;
 	private int readerState = IkaraConstant.READER_STATE.NIGHT;
 	private Handler mHandler = new Handler() {
 
@@ -170,6 +170,11 @@ public class CoreReadActivity extends Activity {
 	private RelativeLayout myRootView;
 	private ZLAndroidWidget myMainView;
 	private boolean isBottomAndTopMenuShow = false;
+	private String chapTitle;
+	private String bookId;
+	private String bookTitle;
+	private int currentChapIndex = 0;
+	private boolean isOpenBook;
 
 	private synchronized void openBook(Intent intent, Runnable action,
 			boolean force) {
@@ -194,12 +199,10 @@ public class CoreReadActivity extends Activity {
 //			}?
 		}
 		myFBReaderApp.openBook(myBook, null, action);
+		
+		Log.e(TAG, "TOATALTL "+myFBReaderApp.getTextView().pagePosition().Total);
 	}
 	
-	private void loadBookFromSDCard(String path){
-		myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
-	}
-
 	public Book createBookForFile(ZLFile file) {
 		if (file == null) {
 			return null;
@@ -228,6 +231,15 @@ public class CoreReadActivity extends Activity {
 		setContentView(R.layout.core_main);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 		getZLibrary().setActivity(CoreReadActivity.this);
+		
+		currentChapIndex = getIntent().getExtras().getInt("chap_index");
+		chapTitle = getIntent().getExtras().getString("chap_title");
+		bookId = getIntent().getExtras().getString("book_id");
+		isOpenBook = getIntent().getExtras().getBoolean("open_book");
+		bookTitle = getIntent().getExtras().getString("book_title");
+		chapId = getIntent().getExtras().getString("chap_id");
+		
+		Log.v(TAG, "oncreate "+chapTitle +" "+bookId);
 		//
 		option = ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;
 		//
@@ -277,13 +289,24 @@ public class CoreReadActivity extends Activity {
 		myRootView = (RelativeLayout) findViewById(R.id.root_view);
 		myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
 		imgChangeState = (ImageView)findViewById(R.id.img_change_state_reader);
-		
+		imgChangeState.setOnClickListener(this);
 		topLL = (RelativeLayout) findViewById(R.id.topMenuLL);
 		bottomLL = (LinearLayout) findViewById(R.id.bottomMenuLL);
-//		bookMoreButton = (ImageView) findViewById(R.id.bookMoreButton);
+		seek = (SeekBar) findViewById(R.id.sk_page);
+		seek.setOnSeekBarChangeListener(this);
 		fontBigButton = (TextView) findViewById(R.id.tv_increase);
 		fontSmallButton = (TextView) findViewById(R.id.tv_decrease);
+		((ImageView) findViewById(R.id.img_back)).setOnClickListener(this);
+		((ImageView) findViewById(R.id.img_share)).setOnClickListener(this);
+		((TextView) findViewById(R.id.tv_title_bar)).setText(bookTitle);
+		((ImageView) findViewById(R.id.img_share))
+				.setBackgroundResource(R.drawable.view_state_clipboard_button);
 //		bookHomeButton = (ImageView) findViewById(R.id.bookHomeButton);
+		tvChapIndex = (TextView) findViewById(R.id.tv_chapter_index);
+		tvChapIndexTop = (TextView) findViewById(R.id.tv_chap_top);
+		tvQuyenIndex = (TextView) findViewById(R.id.tv_book_quyen_index);
+		tvChapIndexTop.setVisibility(View.VISIBLE);
+		tvChapIndexTop.setText((currentChapIndex + 1) + "");
 		//
 		if (myFBReaderApp.getColorProfileName() != null
 				&& myFBReaderApp.getColorProfileName().equals(
@@ -313,6 +336,12 @@ public class CoreReadActivity extends Activity {
 						R.color.main_bg_1));
 			}
 		}
+		
+//		final ZLTextView textView = myFBReaderApp.getTextView();
+//		final ZLTextView.PagePosition pagePosition = textView.pagePosition();
+//		
+//		Log.e(TAG, "Total "+pagePosition.Total);
+//		seek.setMax(pagePosition.Total - 1);
 	}
 
 	public ZLAndroidWidget getMainView() {
@@ -320,48 +349,6 @@ public class CoreReadActivity extends Activity {
 	}
 
 	private void setListener() {
-//		bookMoreButton.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				showPopupWindow(bookMoreButton);
-//				Log.i("MAIN", "onClick()");
-//			}
-//		});
-		imgChangeState.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				if(readerState == IkaraConstant.READER_STATE.DAY){
-					readerState = IkaraConstant.READER_STATE.NIGHT;
-					myFBReaderApp.runAction(
-							ActionCode.SWITCH_TO_NIGHT_PROFILE,
-							new SwitchProfileAction(myFBReaderApp,
-									ColorProfile.NIGHT));
-					Toast.makeText(CoreReadActivity.this, "夜间模式开启",
-							Toast.LENGTH_SHORT).show();
-					Message message = new Message();
-					message.what = NIGHT_UPDATEUI;
-					mHandler.sendMessage(message);
-					isNight = true;
-				}else{
-					readerState = IkaraConstant.READER_STATE.DAY;
-					myFBReaderApp.runAction(
-							ActionCode.SWITCH_TO_DAY_PROFILE,
-							new SwitchProfileAction(myFBReaderApp,
-									ColorProfile.DAY));
-					Toast.makeText(CoreReadActivity.this, "白天模式开启",
-							Toast.LENGTH_SHORT).show();
-					Message message = new Message();
-					message.what = DAY_UPDATEUI;
-					mHandler.sendMessage(message);
-					isNight = false;
-				}
-			}
-		});
 		
 		fontBigButton.setOnClickListener(new View.OnClickListener() {
 
@@ -385,14 +372,6 @@ public class CoreReadActivity extends Activity {
 				}
 			}
 		});
-//		bookHomeButton.setOnClickListener(new View.OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				backPress();
-//			}
-//		});
 	}
 
 	@Override
@@ -437,13 +416,6 @@ public class CoreReadActivity extends Activity {
 				myFBReaderApp.getViewWidget().repaint();
 			}
 		});
-
-		((PopupPanel) myFBReaderApp.getPopupById(TextSearchPopup.ID))
-				.setPanelInfo(CoreReadActivity.this, myRootView);
-		((PopupPanel) myFBReaderApp.getPopupById(NavigationPopup.ID))
-				.setPanelInfo(CoreReadActivity.this, myRootView);
-		((PopupPanel) myFBReaderApp.getPopupById(SelectionPopup.ID))
-				.setPanelInfo(CoreReadActivity.this, myRootView);
 	}
 
 	@Override
@@ -657,6 +629,40 @@ public class CoreReadActivity extends Activity {
 	private BookCollectionShadow getCollection() {
 		return (BookCollectionShadow) myFBReaderApp.Collection;
 	}
+	
+	private void gotoPage(int page) {
+		final ZLTextView view = myFBReaderApp.getTextView();
+		if (page == 1) {
+			view.gotoHome();
+		} else {
+			view.gotoPage(page);
+		}
+		myFBReaderApp.getViewWidget().reset();
+		myFBReaderApp.getViewWidget().repaint();
+	}
+	
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress,
+			boolean fromUser) {
+		// TODO Auto-generated method stub
+//		pageIndex = progress;
+//		tvIndex.setText((progress + 1) + "/" + (sizeChap + 1));
+		final int page = progress + 1;
+		final int pagesNumber = seekBar.getMax() + 1;
+		gotoPage(page);
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		//pagerReader.setCurrentItem(pageIndex);
+	}
 
 	/*
 	 * @弹出POPU MENU
@@ -775,5 +781,62 @@ public class CoreReadActivity extends Activity {
 			isNight = false;
 		}
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.img_back:
+//			stopNewService();
+//			saveIndexPage();
+			finish();
+			break;
+
+		case R.id.tv_chap_top:
+		case R.id.img_share:
+
+			Intent intent = new Intent(getApplicationContext(),
+					IChapListActivity.class);
+			intent.putExtra("current_index_chap", currentChapIndex);
+			intent.putExtra("option_view", IChapListActivity.CHAPTER);
+			startActivityForResult(intent, 100);
+			break;
+
+		case R.id.img_change_state_reader:
+			if(readerState == IkaraConstant.READER_STATE.DAY){
+				readerState = IkaraConstant.READER_STATE.NIGHT;
+				myFBReaderApp.runAction(
+						ActionCode.SWITCH_TO_NIGHT_PROFILE,
+						new SwitchProfileAction(myFBReaderApp,
+								ColorProfile.NIGHT));
+				Message message = new Message();
+				message.what = NIGHT_UPDATEUI;
+				mHandler.sendMessage(message);
+				isNight = true;
+			}else{
+				readerState = IkaraConstant.READER_STATE.DAY;
+				myFBReaderApp.runAction(
+						ActionCode.SWITCH_TO_DAY_PROFILE,
+						new SwitchProfileAction(myFBReaderApp,
+								ColorProfile.DAY));
+				Message message = new Message();
+				message.what = DAY_UPDATEUI;
+				mHandler.sendMessage(message);
+				isNight = false;
+			}
+			break;
+
+		case R.id.tv_index:
+			break;
+
+		case R.id.img_font_text:
+			Intent intentA = new Intent(getApplicationContext(),
+					IChapListActivity.class);
+			intentA.putExtra("current_index_chap", currentChapIndex);
+			intentA.putExtra("option_view", IChapListActivity.FONT);
+			startActivityForResult(intentA, 100);
+			break;
+		}		
 	}
 }
