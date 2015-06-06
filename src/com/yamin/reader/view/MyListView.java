@@ -7,7 +7,7 @@ import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 /**
 * @ClassName: MyListView 
 * @Description: TODO(这里用一句话描述这个类的作用) 

@@ -25,7 +25,7 @@ import org.geometerplus.zlibrary.core.util.ZLColor;
 
 import android.content.Context;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 class ZLColorPreference extends ColorPreference {
 	private final ZLColorOption myOption;

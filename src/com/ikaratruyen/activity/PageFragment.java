@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class PageFragment extends Fragment {
     private final static String PAGE_TEXT = "PAGE_TEXT";

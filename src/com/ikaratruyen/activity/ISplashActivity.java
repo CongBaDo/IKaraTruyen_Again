@@ -22,7 +22,7 @@ import com.ikaratruyen.utils.IkaraConstant;
 import com.ikaratruyen.utils.IkaraPreferences;
 import com.ikaratruyen.utils.PrefConstant;
 import com.splunk.mint.Mint;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class ISplashActivity extends SherlockFragmentActivity implements OnClickListener{
 

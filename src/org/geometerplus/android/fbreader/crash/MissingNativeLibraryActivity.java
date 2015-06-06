@@ -27,7 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class MissingNativeLibraryActivity extends Activity {
 	@Override

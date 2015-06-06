@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.model.Book;
 import com.yamin.reader.utils.Commons;
 

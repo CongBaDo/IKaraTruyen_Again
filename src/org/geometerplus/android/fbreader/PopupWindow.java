@@ -34,7 +34,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class PopupWindow extends LinearLayout {
 	public static enum Location {

@@ -34,7 +34,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.adapter.FileListAdapter;
 import com.yamin.reader.database.DbDataOperation;
 import com.yamin.reader.database.DbTags;

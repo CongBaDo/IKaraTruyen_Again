@@ -9,7 +9,7 @@ import android.preference.Preference;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class AmbilWarnaPreference extends Preference {
 	int value;

@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 public class WelcomeActivity  extends Activity{
 	   //延迟2.0秒 
 		private final long DISPLAY_DURATION = 2000; 

@@ -6,7 +6,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.view.SwitchButton;
 public class BookSettingsActivity  extends Activity implements OnCheckedChangeListener{
 

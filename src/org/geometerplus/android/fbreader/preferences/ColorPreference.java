@@ -29,7 +29,7 @@ import android.preference.Preference;
 import android.view.View;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public abstract class ColorPreference extends Preference {
 	protected ColorPreference(Context context) {

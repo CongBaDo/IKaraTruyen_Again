@@ -66,7 +66,7 @@ import com.ikaratruyen.utils.DownloadService;
 import com.ikaratruyen.utils.IKaraDbHelper;
 import com.ikaratruyen.utils.ISettings;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 /**
  * This activity is an example of a responsive Android UI. On phones, the

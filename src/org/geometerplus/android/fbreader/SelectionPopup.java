@@ -25,7 +25,7 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.activity.CoreReadActivity;
 
 public class SelectionPopup extends ButtonsPopupPanel {

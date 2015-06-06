@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.ikaratruyen.model.Book;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class BookAdapter extends BaseAdapter{
 	

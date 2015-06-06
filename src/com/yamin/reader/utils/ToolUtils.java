@@ -20,7 +20,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class ToolUtils {
 	public static boolean isWifiConnected(Context context) {

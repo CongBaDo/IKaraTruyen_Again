@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ikaratruyen.model.ItemFont;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class FontAdapter extends BaseAdapter{
 	

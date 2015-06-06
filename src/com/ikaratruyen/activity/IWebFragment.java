@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class IWebFragment extends Fragment{
 

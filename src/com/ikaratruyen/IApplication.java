@@ -1,5 +1,11 @@
 package com.ikaratruyen;
 
+import org.geometerplus.zlibrary.core.sqliteconfig.ZLSQLiteConfig;
+import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
+import org.geometerplus.zlibrary.ui.android.image.ZLAndroidImageManager;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
+import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -17,9 +23,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
-public class IApplication extends Application {
+public class IApplication extends ZLAndroidApplication {
 
 	private static final String TAG = "MyApplication";
 	private static IApplication singleton;

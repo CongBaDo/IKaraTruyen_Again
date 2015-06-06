@@ -32,7 +32,7 @@ import com.ikaratruyen.model.ItemFont;
 import com.ikaratruyen.utils.ISettings;
 import com.ikaratruyen.utils.IkaraPreferences;
 import com.ikaratruyen.utils.PrefConstant;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 /**
  * This activity is an example of a responsive Android UI. On phones, the

@@ -94,7 +94,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.adapter.PopGalleryAdapter;
 import com.yamin.reader.database.DbDataOperation;
 import com.yamin.reader.utils.ToolUtils;

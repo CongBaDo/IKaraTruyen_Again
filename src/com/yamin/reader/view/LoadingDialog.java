@@ -15,7 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 /**
  * 

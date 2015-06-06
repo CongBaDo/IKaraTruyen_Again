@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.ikaratruyen.model.App;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class UngDungHayAdapter extends BaseAdapter{
 	

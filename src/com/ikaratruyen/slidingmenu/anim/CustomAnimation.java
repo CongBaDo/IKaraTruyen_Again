@@ -6,7 +6,7 @@ import com.ikaratruyen.slidingmenu.example.BaseActivity;
 import com.ikaratruyen.slidingmenu.example.SampleListFragment;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.CanvasTransformer;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public abstract class CustomAnimation extends BaseActivity {
 	

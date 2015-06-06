@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ikaratruyen.model.Chapter;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class ChapAdapter extends BaseAdapter{
 	

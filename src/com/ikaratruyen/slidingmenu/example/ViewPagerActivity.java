@@ -11,7 +11,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 
 import com.ikaratruyen.slidingmenu.example.fragments.ColorFragment;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class ViewPagerActivity extends BaseActivity {
 

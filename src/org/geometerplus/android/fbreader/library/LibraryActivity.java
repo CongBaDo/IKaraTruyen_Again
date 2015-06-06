@@ -50,7 +50,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.activity.CoreReadActivity;
 
 public class LibraryActivity extends TreeActivity<LibraryTree> implements MenuItem.OnMenuItemClickListener, View.OnCreateContextMenuListener, IBookCollection.Listener {

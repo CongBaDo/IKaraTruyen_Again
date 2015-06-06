@@ -89,7 +89,7 @@ import com.ikaratruyen.utils.Utils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 /**
  * This activity is an example of a responsive Android UI.

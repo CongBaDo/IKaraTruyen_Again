@@ -39,7 +39,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.activity.CoreReadActivity;
 
 public class TOCActivity extends ListActivity {

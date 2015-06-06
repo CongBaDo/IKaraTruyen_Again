@@ -42,7 +42,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 class LibraryTreeAdapter extends TreeAdapter {
 	private CoverManager myCoverManager;

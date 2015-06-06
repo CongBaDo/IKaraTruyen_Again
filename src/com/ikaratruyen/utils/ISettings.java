@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.ikaratruyen.model.Chapter;
 import com.ikaratruyen.utils.IkaraConstant.DEVICETYPE;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class ISettings {
 	

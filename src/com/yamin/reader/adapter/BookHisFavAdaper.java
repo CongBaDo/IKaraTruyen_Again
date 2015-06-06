@@ -17,7 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.database.DbDataOperation;
 import com.yamin.reader.model.Book;
 import com.yamin.reader.utils.ToolUtils;

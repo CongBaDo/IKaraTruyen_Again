@@ -31,7 +31,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 abstract class ZLTreeAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, View.OnCreateContextMenuListener {
 	private final ListView myParent;

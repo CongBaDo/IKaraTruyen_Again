@@ -58,7 +58,7 @@ import com.ikaratruyen.utils.PageSplitter;
 import com.ikaratruyen.utils.PrefConstant;
 import com.ikaratruyen.utils.Server;
 import com.ikaratruyen.utils.Utils;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class INewReaderActivity extends Activity implements OnClickListener,
 		OnSeekBarChangeListener, OnPageChangeListener {

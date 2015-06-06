@@ -23,8 +23,8 @@ import android.util.DisplayMetrics;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ikaratruyen.model.Book;
 import com.ikaratruyen.utils.IkaraConstant.DEVICETYPE;
-import com.yamin.reader.BuildConfig;
-import com.yamin.reader.R;
+import com.ikaratruyen.BuildConfig;
+import com.ikaratruyen.R;
 //DUNG THU VIEN JACKSON http://wiki.fasterxml.com/JacksonHome
 
 

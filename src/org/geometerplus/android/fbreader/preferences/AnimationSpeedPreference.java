@@ -36,7 +36,7 @@ import android.preference.DialogPreference;
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 class AnimationSpeedPreference extends DialogPreference {
 	private final ZLIntegerRangeOption myOption;

@@ -13,7 +13,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class AmbilWarnaDialog {
 	public interface OnAmbilWarnaListener {

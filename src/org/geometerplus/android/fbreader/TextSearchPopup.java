@@ -23,7 +23,7 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 
 import android.widget.RelativeLayout;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.activity.CoreReadActivity;
 
 

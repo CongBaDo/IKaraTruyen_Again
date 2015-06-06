@@ -1,6 +1,6 @@
 package com.ikaratruyen.slidingmenu.example.fragments;
 
-import android.R;
+import com.ikaratruyen.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;

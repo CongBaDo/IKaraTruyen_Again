@@ -46,7 +46,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 import com.yamin.reader.activity.CoreReadActivity;
 
 public class StyleListActivity extends ListActivity implements IBookCollection.Listener {

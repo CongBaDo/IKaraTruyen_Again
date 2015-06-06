@@ -18,7 +18,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class IShareDialog implements OnClickListener {
 

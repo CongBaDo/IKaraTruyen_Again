@@ -7,7 +7,7 @@ import android.support.v4.app.ListFragment;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class BaseActivity extends SlidingFragmentActivity {
 

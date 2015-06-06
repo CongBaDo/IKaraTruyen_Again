@@ -20,7 +20,7 @@ import com.ikaratruyen.callback.OnclickMenuListener;
 import com.ikaratruyen.model.Genre;
 import com.ikaratruyen.model.ItemMenu;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener {
 

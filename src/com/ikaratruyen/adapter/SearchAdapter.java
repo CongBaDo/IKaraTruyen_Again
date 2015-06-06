@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ikaratruyen.model.SearchItem;
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class SearchAdapter extends BaseAdapter{
 	

@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
-import com.yamin.reader.R;
+import com.ikaratruyen.R;
 
 public class PopGalleryAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
