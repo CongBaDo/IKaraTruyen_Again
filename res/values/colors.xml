@@ -20,8 +20,6 @@
 <resources>
 
     <color name="transparent">#00000000</color>
-    <color name="white">#ffffff</color>
-    <color name="black">#ff000000</color>
     <color name="gray">#FFDBDBDB</color>
     <color name="darkgray">#50808080</color>
     <!-- A light Holo shade of blue -->
@@ -47,5 +45,29 @@
     <color name="main_bg_1">#fdf7d5</color>
     <color name="main_bg_2">#668564</color>
     <color name="main_bg_3">#997c56</color>
+    
+    <color name="md__transparent">#00000000</color>
+    <color name="md__defaultBackground">#FF555555</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="black">#000000</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="green">#00FF00</color>
+    <color name="orange">#FFA500</color>
+    <color name="brown">#A52A2A</color>
+    <color name="grey">#C0C0C0</color>
+    <color name="blue">#0000FF</color>
+    <color name="default_screen_bg">#20324a</color>
+    <color name="rounded_container_bg">#80000000</color>
+    <color name="rounded_container_border">#3b3f44</color>
+    <color name="light_gray_header_color">#646663</color>
+    <color name="white_opacity">#CCffFFFF</color>
+    <color name="grey_opacity">#66000000</color>
+    <color name="grey_text">#5e5e5e</color>
+    
+    <color name="color_text_share">#1376de</color>
+    <color name="color_text_book_shelf">#ebc48e</color>
+    <color name="color_text_bottom">#1377d1</color>
+    
 
 </resources>

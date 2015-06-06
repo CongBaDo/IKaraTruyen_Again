@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/grey" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_change_state_reader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/icon_contrast"
+                android:contentDescription="@string/app_name" />
+
+            <ImageView
+                android:id="@+id/img_font_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:scaleType="fitXY"
+                android:background="@drawable/icon_font_text"
+                android:contentDescription="@string/app_name"
+                android:padding="12dp" />
+
+            <TextView
+                android:id="@+id/tv_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Aa-"
+                android:textColor="@color/color_text_bottom"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tv_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Aa+"
+                android:textColor="@color/color_text_bottom"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/sk_page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/tv_book_quyen_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/book_value"
+                android:textColor="@color/color_text_bottom"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/book_value"
+                android:textColor="@color/color_text_bottom" />
+
+            <TextView
+                android:id="@+id/tv_chapter_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/chapter_value"
+                android:textColor="@color/color_text_bottom" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

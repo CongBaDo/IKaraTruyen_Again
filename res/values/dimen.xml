@@ -6,4 +6,21 @@
     <dimen name="ambilwarna_hueWidth">30dp</dimen>
     <dimen name="ambilwarna_spacer">8dp</dimen>
 
+     <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="list_padding">10dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
+
+    <integer name="num_cols">1</integer>
+
+    <dimen name="book_size_w">60dp</dimen>
+    <dimen name="book_size_h">78dp</dimen>
+    <dimen name="img_total_w">102dp</dimen>
+    <dimen name="img_detail_thumb_gosach">12dp</dimen>
+    <dimen name="prog_bar">65dp</dimen>
+    <dimen name="img_detail_thumb_w">90dp</dimen>
+    <dimen name="img_detail_thumb_h">118dp</dimen>
+    <dimen name="space_between_view">4dp</dimen>
+    <dimen name="space_between_double_view">8dp</dimen>
+    <dimen name="space_between_triple_view">12dp</dimen>
+    <dimen name="text_size">18sp</dimen>
 </resources>

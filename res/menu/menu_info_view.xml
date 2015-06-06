@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ikaratruyen.MainActivity" >
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/icon_share"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/share"/>
+
+</menu>

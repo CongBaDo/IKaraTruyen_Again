@@ -1,0 +1,40 @@
+<resources>
+
+    <!--
+         Customize dimensions originally defined in res/values/dimens.xml (such as
+         screen margins) for sw600dp devices (e.g. 7" tablets) here.
+    -->
+
+    <dimen name="image_thumbnail_size_port">130dp</dimen>
+    <dimen name="image_thumbnail_size_land">190dp</dimen>
+    <dimen name="shelf_item_width">124dp</dimen>
+    <dimen name="shelf_item_height">180dp</dimen>
+    <dimen name="padding_left_ann">8dp</dimen>
+    <dimen name="shelf_item_width_ann">180dp</dimen>
+    <dimen name="shelf_item_height_ann">124dp</dimen>
+    <dimen name="shelf_item_download_width">80dp</dimen>
+    <dimen name="shelf_item_download_height">118dp</dimen>
+    <dimen name="padding_left_download_view_ann">16dp</dimen>
+    <dimen name="issue_text_size">16sp</dimen>
+    <dimen name="edt_username_width">360dp</dimen>
+    <dimen name="base_w">120dp</dimen>
+    <dimen name="base_h">204dp</dimen>
+    <dimen name="follow_thumb_w">70dp</dimen>
+    <dimen name="follow_thumb_h">120dp</dimen>
+    
+    <dimen name="img_total_w">285dp</dimen>
+    
+    <dimen name="prog_bar">200dp</dimen>
+    <dimen name="img_detail_thumb_gosach">25dp</dimen>
+    <dimen name="img_detail_thumb_w">260dp</dimen>
+    <dimen name="img_detail_thumb_h">340dp</dimen>
+    <dimen name="space_between_baseview">4dp</dimen>
+    <dimen name="textsize_base">18sp</dimen>
+    <dimen name="book_size_w">60dp</dimen>
+    <dimen name="book_size_h">78dp</dimen>
+    <dimen name="space_between_view">8dp</dimen>
+    
+    <dimen name="space_between_double_view">16dp</dimen>
+    <dimen name="space_between_triple_view">12dp</dimen>
+
+</resources>

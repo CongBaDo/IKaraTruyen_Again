@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ikaratruyen.activity.IChapListActivity" >
+
+    <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bar"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:background="@drawable/view_state_back_button"
+                android:contentDescription="@string/about" />
+
+            <TextView
+                android:id="@+id/tv_title_bar"
+                style="@style/TextAppearance.Sherlock.Widget.PopupMenu.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:text="Chapter"
+                android:textColor="@color/white" />
+
+            <EditText
+                android:id="@+id/edt_fill"
+                android:layout_width="44dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:lines="1"
+                android:inputType="numberDecimal"
+                android:layout_marginRight="@dimen/space_between_view"
+                android:background="@drawable/boder_header_edit"
+                android:gravity="center"
+                android:hint="0" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_chap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/space_between_double_view"
+        android:layout_marginLeft="@dimen/space_between_double_view"
+        android:layout_marginRight="@dimen/space_between_double_view"
+        android:background="@drawable/boder_header_detail" >
+    </ListView>
+
+</LinearLayout>

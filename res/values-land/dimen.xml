@@ -2,4 +2,8 @@
 <resources>
 	<dimen name="ambilwarna_hsvWidth">240dp</dimen>
 	<dimen name="ambilwarna_hsvHeight">120dp</dimen>
+	
+	<dimen name="slidingmenu_offset">200dp</dimen>
+
+    <integer name="num_cols">2</integer>
 </resources>

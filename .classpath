@@ -2,7 +2,16 @@
 <classpath>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/google-play-services.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jackson-annotations-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jackson-core-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jackson-databind-2.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/listviewanimations_lib-core_3.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/listviewanimations_lib-manipulation_3.1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/nineoldandroids-2.2.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/splunk-mint-4.1-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/splunk-mint-4.1.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>

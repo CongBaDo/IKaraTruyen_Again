@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contain_child"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/tv_title_chap_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:visibility="gone" />
+
+    <!--
+    <LinearLayout
+        android:id="@+id/ll_container"
+        android:background="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+    </LinearLayout>
+    -->
+    <!--
+         <WebView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    -->
+
+
+    
+         <com.ikaratruyen.customview.JustifiedTextView
+        xmlns:noghteh="http://noghteh.ir"
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lineSpacingExtra="0sp"
+        android:lineSpacingMultiplier="1"
+        android:padding="@dimen/space_between_triple_view"
+        android:text="ALO"
+        android:textColor="@color/black" />
+   
+    <!--
+         <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:lineSpacingExtra="0sp"
+        android:lineSpacingMultiplier="1"
+        android:padding="@dimen/space_between_triple_view"
+        android:textColor="@color/black" />
+    -->
+
+
+</RelativeLayout>

@@ -2,7 +2,6 @@
 <resources>
 
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">Reader Reader</string>
     <string name="tab_shujia">Local library</string>
     <string name="ic_menu_recent">These days</string>
     <string name="ic_menu_fav">Collect</string>
@@ -31,14 +30,12 @@
           ●其他格式的小说还在开发中包括umd,chm.\n
           ●此软件为第一版我还在不断优化和完善中.\n
           ●希望您多多提出宝贵的意见和反馈,支持开源.\n
-          ●caoyamin2012@gmail.com.\n
-       </string>
+          ●caoyamin2012@gmail.com.\n</string>
     <string name="empty_string"></string>
     <string name="enable_sd_card">存储卡不可用!</string>
     <!-- The label for use as a searchable item -->
     <string name="search_label">检索</string>
     <!-- The hint text that appears in the search box. -->
-    <string name="search_hint">检索关键字</string>
 
     <plurals name="search_results">
         <item quantity="one">%1$d result for \"%2$s\": </item>
@@ -53,8 +50,96 @@
     <string name="read_book">阅读</string>
     <string name="favorite_book">收藏</string>
     <string name="book_details">详细信息:</string>
-     <string name="book_favorite">我的收藏</string>
+    <string name="book_favorite">我的收藏</string>
     <string name="share_book">分享</string>
-     <string name="del_book">删除</string>
-      <string name="eit_book">编辑</string>
+    <string name="del_book">删除</string>
+    <string name="eit_book">编辑</string>
+    <string name="app_name">iKara Truyện</string>
+    <string name="properties">SlidingMenu Properties</string>
+    <string name="general">General</string>
+    <string name="viewpager">ViewPager</string>
+    <string name="attach">Attach</string>
+    <string name="title_bar">Title Bar Options</string>
+    <string name="title_bar_slide">Sliding Title Bar</string>
+    <string name="title_bar_content">Sliding Content Only</string>
+    <string name="animations">Custom Animations</string>
+    <string name="anim_zoom">Zoom</string>
+    <string name="anim_scale">Scale</string>
+    <string name="anim_fold">Fold</string>
+    <string name="anim_slide">Slide Up</string>
+    <string name="changing_fragments">Changing Fragments</string>
+    <string name="responsive_ui">Responsive UI</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="left_and_right">Left and Right</string>
+    <string name="github">GitHub</string>
+    <string name="github_label">SlidingMenu on GitHub</string>
+    <string name="what_is_this">What is this?</string>
+    <string name="responsive_explanation">This is an example of a UI that responds well to device type. On phones, the menu will be placed inside a SlidingMenu, while on tablets the menu will be exposed alongside the content because we have enough room to always show it.</string>
+    <string name="about">About</string>
+    <string name="share">Share</string>
+    <string name="licenses">Licenses</string>
+    <string name="contact">Contact</string>
+    <string name="no_email">Sorry, I couldn\'t find any e-mail apps on your phone</string>
+    <string name="title_sach_vua_doc">Sách vừa đọc</string>
+    <string name="title_sach_moi">Sách mới</string>
+    <string name="title_tu_sach">Tủ sách của bạn</string>
+    <string name="title_the_loai">THỂ LOẠI</string>
+    <string name="title_hotro">HỖ TRỢ</string>
+    <string name="title_tien_hiep">Tiên Hiệp</string>
+    <string name="title_kiem_hiep">Kiếm Hiệp</string>
+    <string name="title_ngon_tinh">Ngôn Tình</string>
+    <string name="title_the_teen">Truyện Teen</string>
+    <string name="title_the_do_thi">Đô Thị</string>
+    <string name="title_the_quansu">Quân Sự</string>
+    <string name="title_the_lichsu">Lịch Sử</string>
+    <string name="title_the_xuyenkhong">Xuyên Không</string>
+    <string name="title_the_digioi">Dị Giới</string>
+    <string name="title_the_vongdu">Võng Du</string>
+    <string name="title_the_truyenma">Truyện Ma</string>
+    <string name="title_the_trinhtham">Trinh Thám</string>
+    <string name="title_the_khoahuyen">Khoa Huyễn</string>
+    <string name="title_the_huyenhuyen">Huyền Huyễn</string>
+    <string name="title_the_sachiep">Sắc Hiệp</string>
+    <string name="title_the_dinang">Dị Năng</string>
+    <string name="title_the_tieuthuyet">Tiểu Thuyết</string>
+    <string name="title_ungdunghay">Ứng Dụng Hay</string>
+    <string name="title_trogiup">Trợ Giúp</string>
+    <string name="title_thoat">Thoát</string>
+    <string name="title_detail">Thông tin</string>
+    <string name="title_read">Đọc Truyện </string>
+    <string name="title_read_online">Đọc Online</string>
+    <string name="title_dialog_chon">Lựa chọn</string>
+    <string name="title_download">Download</string>
+    <string name="title_downloading">Downloading</string>
+    <string name="title_like">Thích</string>
+    <string name="title_dislike">Bỏ Thích</string>
+    <string name="title_share_via">Bạn muốn chia sẻ qua</string>
+    <string name="facebook">Facbook</string>
+    <string name="twitter">Twitter</string>
+    <string name="email">Email</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="search_hint">Nhập tên sách muốn tìm</string>
+    <string name="cancel">Cancel</string>
+    <string name="book_value">Quyển</string>
+    <string name="chapter_value">Chương</string>
+    <string name="white_spcae"> \n</string>
+    <string name="share_email_subject">Chia sẻ Truyện</string>
+    <string name="share_email_message_mot">Truyện cực hay \"</string>
+    <string name="share_email_message_hai">\" của tác giả \"</string>
+    <string name="share_email_message_ba">\" nè mọi người </string>
+    <string name="dialog_xong">Xong</string>
+    <string name="dialog_thoi">Thôi</string>
+    <string name="dialog_ungdung_hay_desau">Để sau </string>
+    <string name="dialog_ungdung_hay_khongcai">Không</string>
+    <string name="dialog_ungdung_hay_co">Có</string>
+    <string name="toast_vote">Bạn cho </string>
+    <string name="toast_voted">Bạn cho sao rồi!</string>
+    <string name="app_id">410533232447889</string>
+    <string name="facebook_app_name">iKara Truyện</string>
+    <string name="open_app_hay">Mở</string>
+    <string name="chon_font">Chọn Font</string>
+    <string name="network_erro">Không tải được dữ liệu. Vui lòng kiểm tra kết nối mạng. </string>
+    <!-- <string name="title_sach_vua_doc"></string> -->
+
 </resources>

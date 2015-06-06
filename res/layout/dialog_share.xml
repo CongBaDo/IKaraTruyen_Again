@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:gravity="center_horizontal"
+    android:paddingBottom="@dimen/space_between_double_view"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/boder_share"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/TextAppearance.Sherlock.Widget.PopupMenu.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="12dp"
+            android:text="@string/title_share_via"
+            android:textColor="@color/grey_opacity" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_opacity" />
+
+        <TextView
+            android:id="@+id/tv_facebook"
+            style="@style/TextAppearance.Sherlock.Widget.PopupMenu.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="12dp"
+            android:text="@string/facebook"
+            android:textColor="@color/color_text_share" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_opacity" />
+
+        <TextView
+            android:id="@+id/tv_email"
+            style="@style/TextAppearance.Sherlock.Widget.PopupMenu.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="12dp"
+            android:text="@string/email"
+            android:textColor="@color/color_text_share" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/grey_opacity" />
+
+        <TextView
+            android:id="@+id/tv_copy_link"
+            style="@style/TextAppearance.Sherlock.Widget.PopupMenu.Large"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="12dp"
+            android:text="@string/copy_link"
+            android:textColor="@color/color_text_share" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        style="@style/TextAppearance.Sherlock.Widget.PopupMenu.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/boder_share"
+        android:gravity="center_horizontal"
+        android:padding="12dp"
+        android:text="@string/cancel"
+        android:textColor="@color/color_text_share"
+        android:textStyle="bold" />
+
+</LinearLayout>
