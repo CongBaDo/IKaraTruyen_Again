@@ -123,7 +123,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
 	private void onDrawInScrolling(Canvas canvas) {
 		final ZLView view = ZLApplication.Instance().getCurrentView();
 
-		Log.e(VIEW_LOG_TAG, "onDrawInScrolling");
+		Log.v("ZLAndroidWidget", "onDrawInScrolling");
 //		final int w = getWidth();
 //		final int h = getMainAreaHeight();
 
@@ -144,10 +144,12 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
 					myBitmapManager.shift(index == ZLView.PageIndex.next);
 					view.onScrollingFinished(index);
 					ZLApplication.Instance().onRepaintFinished();
+					Log.e("ZLAndroidWidget", "onDrawInScrolling index "+index);
 					break;
 				}
 				case AnimatedScrollingBackward:
 					view.onScrollingFinished(ZLView.PageIndex.current);
+					Log.i("ZLAndroidWidget", "onDrawInScrolling index "+ZLView.PageIndex.current);
 					break;
 			}
 			onDrawStatic(canvas);

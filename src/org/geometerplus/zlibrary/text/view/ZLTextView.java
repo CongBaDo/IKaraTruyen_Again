@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.geometerplus.android.fbreader.FBReaderApplication;
 import org.geometerplus.zlibrary.core.application.ZLApplication;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.util.ZLColor;
@@ -40,7 +41,14 @@ import org.geometerplus.zlibrary.text.model.ZLTextModel;
 import org.geometerplus.zlibrary.text.model.ZLTextParagraph;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 
+import com.ikaratruyen.IApplication;
+import com.yamin.reader.activity.CoreReadActivity;
+
+import android.util.Log;
+
 public abstract class ZLTextView extends ZLTextViewBase {
+	
+	private static final String TAG = "ZLTextView";
 	public static final int MAX_SELECTION_DISTANCE = 10;
 
 	public interface ScrollingMode {
@@ -247,9 +255,14 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		return (myModel == null) || myModel.getMarks().isEmpty();
 	}
 
+	/**Update bottom reader congbado*/
 	@Override
 	public synchronized void onScrollingFinished(PageIndex pageIndex) {
+		
+		Log.w(TAG, "onScrollingFinished "+pageIndex);
+		
 		switch (pageIndex) {
+		
 			case current:
 				break;
 			case previous:
@@ -270,7 +283,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					myNextPage.StartCursor.setCursor(myCurrentPage.EndCursor);
 					myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
 					Application.getViewWidget().reset();
+//					Application.g
 				}
+				((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).reloadPostition();
 				break;
 			}
 			case next:
@@ -291,6 +306,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 						myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
 						break;
 				}
+				((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).reloadPostition();
 				break;
 			}
 		}

@@ -23,9 +23,7 @@ import org.geometerplus.fbreader.fbreader.FBReaderApp;
 import org.geometerplus.fbreader.fbreader.FBRreshAction;
 import org.geometerplus.fbreader.fbreader.SwitchProfileAction;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
-import org.geometerplus.zlibrary.core.options.ZLEnumOption;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
-import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
@@ -34,29 +32,24 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -65,10 +58,11 @@ import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.ikaratruyen.IApplication;
 import com.ikaratruyen.R;
 import com.ikaratruyen.activity.IChapListActivity;
+import com.ikaratruyen.utils.ISettings;
 import com.ikaratruyen.utils.IkaraConstant;
 import com.yamin.reader.utils.ToolUtils;
 import com.yamin.reader.view.SwitchButton;
@@ -77,7 +71,7 @@ import com.yamin.reader.view.SwitchButton;
  * 
  * 
  */
-public class CoreReadActivity extends Activity implements OnSeekBarChangeListener, OnClickListener{
+public class CoreReadActivity extends FragmentActivity implements OnSeekBarChangeListener, OnClickListener{
 	private static final String TAG = "CoreReadActivity";
 	
 	public static final String ACTION_OPEN_BOOK = "android.easyreader.action.VIEW";
@@ -200,7 +194,7 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 		}
 		myFBReaderApp.openBook(myBook, null, action);
 		
-		Log.e(TAG, "TOATALTL "+myFBReaderApp.getTextView().pagePosition().Total);
+//		Log.e(TAG, "TOATALTL "+myFBReaderApp.getTextView().get);
 	}
 	
 	public Book createBookForFile(ZLFile file) {
@@ -238,6 +232,14 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 		isOpenBook = getIntent().getExtras().getBoolean("open_book");
 		bookTitle = getIntent().getExtras().getString("book_title");
 		chapId = getIntent().getExtras().getString("chap_id");
+//		LinearLayout headerBar = (LinearLayout) findViewById(R.id.top_bar_reader);
+//		TypedValue tv = new TypedValue();
+//		if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+//			int actionBarHeight = TypedValue.complexToDimensionPixelSize(
+//					tv.data, getResources().getDisplayMetrics());
+//			headerBar.setLayoutParams(new LayoutParams(
+//					LayoutParams.MATCH_PARENT, actionBarHeight));
+//		}
 		
 		Log.v(TAG, "oncreate "+chapTitle +" "+bookId);
 		//
@@ -296,6 +298,7 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 		seek.setOnSeekBarChangeListener(this);
 		fontBigButton = (TextView) findViewById(R.id.tv_increase);
 		fontSmallButton = (TextView) findViewById(R.id.tv_decrease);
+		tvIndex = (TextView)findViewById(R.id.tv_index);
 		((ImageView) findViewById(R.id.img_back)).setOnClickListener(this);
 		((ImageView) findViewById(R.id.img_share)).setOnClickListener(this);
 		((TextView) findViewById(R.id.tv_title_bar)).setText(bookTitle);
@@ -336,12 +339,6 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 						R.color.main_bg_1));
 			}
 		}
-		
-//		final ZLTextView textView = myFBReaderApp.getTextView();
-//		final ZLTextView.PagePosition pagePosition = textView.pagePosition();
-//		
-//		Log.e(TAG, "Total "+pagePosition.Total);
-//		seek.setMax(pagePosition.Total - 1);
 	}
 
 	public ZLAndroidWidget getMainView() {
@@ -427,6 +424,7 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 	protected void onResume() {
 		super.onResume();
 
+		IApplication.getInstance().setCurrentActivity(CoreReadActivity.this);
 		PopupPanel.restoreVisibilities(myFBReaderApp);
 		ApiServerImplementation.sendEvent(this,
 				ApiListener.EVENT_READ_MODE_OPENED);
@@ -647,9 +645,33 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 		// TODO Auto-generated method stub
 //		pageIndex = progress;
 //		tvIndex.setText((progress + 1) + "/" + (sizeChap + 1));
+		//Log.e(TAG, "TOATAL onProgressChanged "+myFBReaderApp.getTextView().pagePosition().Total);
 		final int page = progress + 1;
 		final int pagesNumber = seekBar.getMax() + 1;
 		gotoPage(page);
+		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total + 1));
+	}
+	
+	public void stopLoading(){
+		Log.e(TAG, "stopLoading "+currentChapIndex);
+		seek.setMax(myFBReaderApp.getTextView().pagePosition().Total - 1);
+		if (ISettings.getInstance().getChapListContents().get(currentChapIndex).volume != null) {
+			long volume = ISettings.getInstance().getChapListContents()
+					.get(currentChapIndex).volume;
+			tvQuyenIndex.setVisibility(View.VISIBLE);
+			tvQuyenIndex.setText(getResources().getString(R.string.book_value)
+					+ " " + volume);
+		}
+		
+		Log.v(TAG, "TOATAL "+myFBReaderApp.getTextView().pagePosition().Total+" "+myFBReaderApp.getTextView().pagePosition().Current);
+		tvChapIndex.setText(getResources().getString(R.string.chapter_value)
+				+ " " + (currentChapIndex + 1));
+		
+		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total - 1));
+	}
+	
+	public void reloadPostition(){
+		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total - 1));
 	}
 
 	@Override
@@ -662,125 +684,6 @@ public class CoreReadActivity extends Activity implements OnSeekBarChangeListene
 	public void onStopTrackingTouch(SeekBar seekBar) {
 		// TODO Auto-generated method stub
 		//pagerReader.setCurrentItem(pageIndex);
-	}
-
-	/*
-	 * @弹出POPU MENU
-	 */
-	public void showPopupWindow(View v) {
-		ScrollView layout = (ScrollView) LayoutInflater.from(
-				CoreReadActivity.this).inflate(R.layout.book_settings, null);
-		brightness_slider = (SeekBar) layout.findViewById(R.id.brightness_slider);
-		dayornightSwitch = (SwitchButton) layout.findViewById(R.id.main_myslipswitch);
-		popuMenuLL = (ScrollView) layout.findViewById(R.id.popuMenuBg);
-
-		if (myFBReaderApp.getColorProfileName() != null
-				&& myFBReaderApp.getColorProfileName().equals(
-						ColorProfile.NIGHT)) {
-
-		} else if (myFBReaderApp.getColorProfileName() != null
-				&& myFBReaderApp.getColorProfileName().equals(
-						ColorProfile.SECOND)) {
-		} else if (myFBReaderApp.getColorProfileName() != null
-				&& myFBReaderApp.getColorProfileName().equals(
-						ColorProfile.THIRD)) {
-		} else {
-		}
-		navigation_settings = (LinearLayout) layout
-				.findViewById(R.id.navigation_settings);
-		mPopuwindow = new PopupWindow(layout,
-				ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT);
-		ColorDrawable cd = new ColorDrawable(-0000);
-		mPopuwindow.setBackgroundDrawable(cd);
-		mPopuwindow.setBackgroundDrawable(cd);
-
-		mPopuwindow.setOutsideTouchable(true);
-		mPopuwindow.setFocusable(true);
-		mPopuwindow.showAsDropDown(v);
-		setPopuListener();
-	}
-
-	private void setPopuListener() {
-		// TODO Auto-generated method stub
-
-		brightness_slider
-				.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-					/**
-					 * 拖动条停止拖动的时候调用
-					 */
-					@Override
-					public void onStopTrackingTouch(SeekBar seekBar) {
-
-					}
-					/**
-					 * 拖动条开始拖动的时候调用
-					 */
-					@Override
-					public void onStartTrackingTouch(SeekBar seekBar) {
-
-					}
-					/**
-					 * 拖动条进度改变的时候调用
-					 */
-					@Override
-					public void onProgressChanged(SeekBar seekBar,
-							int progress, boolean fromUser) {
-						setScreenBrightness(progress);
-					}
-				});
-		dayornightSwitch
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						// TODO Auto-generated method stub
-						if (isChecked) {
-							myFBReaderApp.runAction(
-									ActionCode.SWITCH_TO_NIGHT_PROFILE,
-									new SwitchProfileAction(myFBReaderApp,
-											ColorProfile.NIGHT));
-							Toast.makeText(CoreReadActivity.this, "夜间模式开启",
-									Toast.LENGTH_SHORT).show();
-							Message message = new Message();
-							message.what = NIGHT_UPDATEUI;
-							mHandler.sendMessage(message);
-							isNight = true;
-						} else {
-							myFBReaderApp.runAction(
-									ActionCode.SWITCH_TO_DAY_PROFILE,
-									new SwitchProfileAction(myFBReaderApp,
-											ColorProfile.DAY));
-							Toast.makeText(CoreReadActivity.this, "白天模式开启",
-									Toast.LENGTH_SHORT).show();
-							Message message = new Message();
-							message.what = DAY_UPDATEUI;
-							mHandler.sendMessage(message);
-							isNight = false;
-						}
-					}
-				});
-		navigation_settings.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if (mPopuwindow != null && mPopuwindow.isShowing()) {
-					mPopuwindow.dismiss();
-				}
-				((NavigationPopup) myFBReaderApp
-						.getPopupById(NavigationPopup.ID)).runNavigation();
-			}
-		});
-		if (myFBReaderApp.getColorProfileName() != null
-				&& myFBReaderApp.getColorProfileName().equals(
-						ColorProfile.NIGHT)) {
-			isNight = true;
-		} else {
-			isNight = false;
-		}
-
 	}
 
 	@Override

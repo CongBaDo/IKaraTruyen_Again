@@ -36,10 +36,14 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
+	
+	private static final String TAG = "ZLAndroidApplicationWindow";
+	
 	private final HashMap<MenuItem,String> myMenuItemMap = new HashMap<MenuItem,String>();
 
 	private final MenuItem.OnMenuItemClickListener myMenuListener =
@@ -95,6 +99,8 @@ public final class ZLAndroidApplicationWindow extends ZLApplicationWindow {
 
 	@Override
 	public void runWithMessage(String key, Runnable action, Runnable postAction) {
+		
+		Log.e(TAG, "runWithMessage");
 		final Activity activity =
 			((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).getActivity();
 		if (activity != null) {

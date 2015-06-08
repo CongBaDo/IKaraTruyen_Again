@@ -31,6 +31,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
+import com.yamin.reader.activity.CoreReadActivity;
 import com.yamin.reader.view.LoadingDialog;
 
 public abstract class UIUtil {
@@ -125,7 +126,7 @@ public abstract class UIUtil {
 			public void run() {
 				// final ProgressDialog progress = ProgressDialog.show(activity,
 				// null, "请稍后...加载中", true, false);
-				showLoading(activity, "请稍后...加载中");
+				showLoading(activity, "Loading");
 				final Thread runner = new Thread() {
 					public void run() {
 						action.run();
@@ -134,6 +135,7 @@ public abstract class UIUtil {
 								try {
 									// progress.dismiss();
 									stopLoading();
+									((CoreReadActivity)activity).stopLoading();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}

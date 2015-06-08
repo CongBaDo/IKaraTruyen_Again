@@ -77,7 +77,7 @@ public class FileBrowserActivity extends Activity implements
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case 0:
-				showLoading(FileBrowserActivity.this, "搜索中...");
+				showLoading(FileBrowserActivity.this, "Waiting");
 				break;
 			case 1:
 				stopLoading();
@@ -87,8 +87,8 @@ public class FileBrowserActivity extends Activity implements
 					i.putStringArrayListExtra("SEARCH_LIST", searchitems);
 					startActivity(i);
 				} else {
-					Toast.makeText(FileBrowserActivity.this, "未匹配到文件！",
-							Toast.LENGTH_LONG).show();
+//					Toast.makeText(FileBrowserActivity.this, "未匹配到文件！",
+//							Toast.LENGTH_LONG).show();
 				}
 				break;
 			//

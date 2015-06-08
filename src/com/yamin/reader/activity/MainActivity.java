@@ -602,7 +602,7 @@ public class MainActivity extends Activity {
 			// 0
 			if (forWhat == 0) {
 				//
-				showLoading(MainActivity.this, "SD卡扫描中...");
+				showLoading(MainActivity.this, "Loading SD Card");
 				if (mFileLists != null && mFileLists.size() > 0) {
 					mFileLists.clear();
 				}
