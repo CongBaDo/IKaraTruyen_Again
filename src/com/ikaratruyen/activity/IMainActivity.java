@@ -85,7 +85,7 @@ import com.ikaratruyen.utils.ISettings;
 import com.ikaratruyen.utils.IkaraConstant;
 import com.ikaratruyen.utils.IkaraPreferences;
 import com.ikaratruyen.utils.PrefConstant;
-import com.ikaratruyen.utils.Utils;
+import com.ikaratruyen.utils.KaraUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -135,7 +135,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 		setContentView(R.layout.activity_mainkara);
 		fragment = new IWebFragment();
 		int adSize = AdSize.BANNER.getHeight();
-		int bottomHeight = Utils.dpToPx(this, 48);
+		int bottomHeight = KaraUtils.dpToPx(this, 48);
 		Log.e(TAG, "onCreate "+adSize+" "+bottomHeight);
 		showLoading();
 		

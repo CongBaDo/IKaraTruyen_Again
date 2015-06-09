@@ -21,15 +21,16 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ikaratruyen.BuildConfig;
+import com.ikaratruyen.IApplication;
+import com.ikaratruyen.R;
 import com.ikaratruyen.model.Book;
 import com.ikaratruyen.utils.IkaraConstant.DEVICETYPE;
-import com.ikaratruyen.BuildConfig;
-import com.ikaratruyen.R;
 //DUNG THU VIEN JACKSON http://wiki.fasterxml.com/JacksonHome
 
 
-public class Utils {
-	private static final Logger log = Logger.getLogger(Utils.class
+public class KaraUtils {
+	private static final Logger log = Logger.getLogger(KaraUtils.class
 			.getName());
 	static ObjectMapper mapper = new ObjectMapper();
 	
@@ -42,7 +43,60 @@ public class Utils {
 	      return result;
 	}  
 	
-	public static void writeFileOnSDCard(String strWrite, Context context,String fileName)
+	private static String createLocalPath(String bookName){
+		String path = Environment.getExternalStorageDirectory() + "/" + IApplication.getInstance().packageName + "/" + bookName;
+		return path;
+	}
+	
+	public static String getChapContentFromSdcard(String bookName, int chapIndex){
+		String path = Environment.getExternalStorageDirectory() + "/" + IApplication.getInstance().packageName + "/" + bookName+"/chap_"+chapIndex+".fb2";
+		
+		File pathFile = new File(path);
+		if(pathFile.exists()){
+			return path;
+		}else{
+			return null;
+		}
+	}
+	
+	public static void saveChapContent2SDCard(String bookName, int chapIndex, String content){
+		String path = createLocalPath(bookName);
+		
+		try{
+			File filePath = new File(path);
+			if(!filePath.exists()){
+				filePath.mkdirs();
+			}
+			
+			content = convert2Html(content);
+			
+			String fileName = "chap_"+chapIndex+".fb2";
+			File myFile = new File(path + File.separator + "/"+fileName);
+			FileOutputStream fOut = new FileOutputStream(myFile);
+			OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut, "UTF-8");
+			myOutWriter.append(content);
+			myOutWriter.close();
+			fOut.close();
+			
+		}catch(Exception e){}
+	}
+	
+	private static String convert2Html(String originalText){
+		String results = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
+		results = results + "\n";
+		results = results + "<body>";
+		String[] lines = originalText.split(System.getProperty("line.separator"));
+		
+		for(int i = 0; i < lines.length; i++){
+			results = results + "<p>"+lines[i]+"</p>";
+		}
+		
+		results = results +"</body>";
+		
+		return results;
+	}
+	
+	public static void writeFileOnSDCard(String strWrite, Context context, String fileName)
     {
 		if (BuildConfig.DEBUG){
             try 

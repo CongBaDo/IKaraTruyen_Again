@@ -151,8 +151,9 @@ public class ColorProfile {
 
 			}
 			else{
-			this.WallpaperOption = new ZLStringOption("Colors", name
-					+ ":Wallpaper", "wallpapers/1.png");
+				this.WallpaperOption = new ZLStringOption("Colors", name + ":Wallpaper","");
+//			this.WallpaperOption = new ZLStringOption("Colors", name
+//					+ ":Wallpaper", "wallpapers/1.png");
 			this.BackgroundOption = createOption(name, "Background", 255, 255,
 					255);
 			this.SelectionBackgroundOption = createOption(name,
@@ -161,7 +162,7 @@ public class ColorProfile {
 					"SelectionForeground", 220, 70, 40);
 			this.HighlightingOption = createOption(name, "Highlighting", 100,
 					70, 40);
-			this.RegularTextOption = createOption(name, "Text", 100, 70, 40);
+			this.RegularTextOption = createOption(name, "Text", 0, 0, 0);
 			this.HyperlinkTextOption = createOption(name, "Hyperlink", 100, 70,
 					40);
 			this.VisitedHyperlinkTextOption = createOption(name,

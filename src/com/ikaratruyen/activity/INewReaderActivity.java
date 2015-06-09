@@ -57,7 +57,7 @@ import com.ikaratruyen.utils.IkaraPreferences;
 import com.ikaratruyen.utils.PageSplitter;
 import com.ikaratruyen.utils.PrefConstant;
 import com.ikaratruyen.utils.Server;
-import com.ikaratruyen.utils.Utils;
+import com.ikaratruyen.utils.KaraUtils;
 import com.ikaratruyen.R;
 
 public class INewReaderActivity extends Activity implements OnClickListener,
@@ -387,7 +387,7 @@ public class INewReaderActivity extends Activity implements OnClickListener,
 		
 		String convertHtml = convert2Html(content);
 		Log.i(TAG, "processChapContent "+convertHtml);
-		Utils.writeFileOnSDCard(convertHtml, getApplicationContext(), "nemodotest.fb2");
+		KaraUtils.writeFileOnSDCard(convertHtml, getApplicationContext(), "nemodotest.fb2");
 		tvChapIndexTop.setText((currentChapIndex + 1) + "");
 		tvIndex.setText(pageIndex + "/" + (sizeChap + 1));
 		tvChapIndex.setText(getResources().getString(R.string.chapter_value)
@@ -402,8 +402,8 @@ public class INewReaderActivity extends Activity implements OnClickListener,
 	}
 
 	private void resetTextSize(final int state) {
-		int bottomHeight = Utils.dpToPx(INewReaderActivity.this, 50);
-		int padding = Utils.dpToPx(INewReaderActivity.this, 12);
+		int bottomHeight = KaraUtils.dpToPx(INewReaderActivity.this, 50);
+		int padding = KaraUtils.dpToPx(INewReaderActivity.this, 12);
 //		if(Utils.detectDeviceType(INewReaderActivity.this) == DEVICETYPE.PHONE){
 //			bottomHeight = bottomHeight * 3;
 //		}else{
@@ -411,7 +411,7 @@ public class INewReaderActivity extends Activity implements OnClickListener,
 //		}
 		
 		pageSplitter = new PageSplitter(ISettings.getInstance().getWidth() - 2*padding,
-				ISettings.getInstance().getHeight() - Utils.getStatusBarHeight(getApplicationContext()) - 2*padding , 1, 0);
+				ISettings.getInstance().getHeight() - KaraUtils.getStatusBarHeight(getApplicationContext()) - 2*padding , 1, 0);
 		TextPaint textPaint = new TextPaint();
 		textPaint.setTextSize(currentTextSize);
 		pageSplitter.append(currentContent, textPaint);

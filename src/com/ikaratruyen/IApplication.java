@@ -33,6 +33,7 @@ public class IApplication extends ZLAndroidApplication {
 
 	public String userAgent;
 	public String deviceId;
+	public String packageName;
 	private FragmentActivity currentActivity;
 	
 	public FragmentActivity getCurrentActivity() {
@@ -54,6 +55,7 @@ public class IApplication extends ZLAndroidApplication {
 		try {
 			pInfo = getPackageManager()
 					.getPackageInfo(this.getPackageName(), 0);
+			packageName = getPackageName();
 			userAgent = "Shelfie/" + pInfo.versionCode + "("
 					+ android.os.Build.MODEL + ";"
 					+ android.os.Build.VERSION.RELEASE + ")";

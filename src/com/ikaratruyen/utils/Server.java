@@ -122,7 +122,7 @@ public class Server {
 		Log.i(TAG, "responseCode "+mainServer + GET_BOOK_CONTENT);
         try {
         	List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			HttpResponse httpResponse = httpclient.execute(httppost);
@@ -176,7 +176,7 @@ public class Server {
 //		Log.i(GETGENRES, "responseCode "+recording.);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 //			Log.i(GETGENRES, "content "+mainServer + GETGENRES);
@@ -185,7 +185,7 @@ public class Server {
 			
 			int responseCode = httpResponse.getStatusLine().getStatusCode();
 			Log.v(TAG, "content "+content+" "+responseCode);
-			return Utils.deserialize(SearchBooksResponse.class, content);
+			return KaraUtils.deserialize(SearchBooksResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -203,7 +203,7 @@ public class Server {
 //		Log.i(GETGENRES, "responseCode "+recording.);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 //			Log.i(GETGENRES, "content "+mainServer + GETGENRES);
@@ -212,7 +212,7 @@ public class Server {
 			
 			int responseCode = httpResponse.getStatusLine().getStatusCode();
 			Log.v(TAG, "content "+content+" "+responseCode);
-			return Utils.deserialize(StoreGcmIdResponse.class, content);
+			return KaraUtils.deserialize(StoreGcmIdResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -230,7 +230,7 @@ public class Server {
 //		Log.i(GETGENRES, "responseCode "+recording.);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 //			Log.i(GETGENRES, "content "+mainServer + GETGENRES);
@@ -239,7 +239,7 @@ public class Server {
 			
 			int responseCode = httpResponse.getStatusLine().getStatusCode();
 			Log.v(TAG, "content "+content+" "+responseCode);
-			return Utils.deserialize(RateBookResponse.class, content);
+			return KaraUtils.deserialize(RateBookResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -257,7 +257,7 @@ public class Server {
 //		Log.i(GETGENRES, "responseCode "+recording.);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 //			Log.i(GETGENRES, "content "+mainServer + GETGENRES);
@@ -266,7 +266,7 @@ public class Server {
 			
 			int responseCode = httpResponse.getStatusLine().getStatusCode();
 			Log.v(TAG, "content "+content+" "+responseCode);
-			return Utils.deserialize(IncreaseViewCounterResponse.class, content);
+			return KaraUtils.deserialize(IncreaseViewCounterResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -284,7 +284,7 @@ public class Server {
 //		Log.i(GETGENRES, "responseCode "+recording.);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 //			Log.i(GETGENRES, "content "+mainServer + GETGENRES);
@@ -294,7 +294,7 @@ public class Server {
 			int responseCode = httpResponse.getStatusLine().getStatusCode();
 //			Log.i(GETGENRES, "responseCode "+responseCode);
 			Log.v(TAG, "content "+responseCode+" "+content);
-			return Utils.deserialize(GetOtherAppsResponse.class, content);
+			return KaraUtils.deserialize(GetOtherAppsResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -315,7 +315,7 @@ public class Server {
 			GetGenresRequest rateRecordingRequest = new GetGenresRequest();
 			rateRecordingRequest.language = "vi";
 			rateRecordingRequest.platform = "Android";
-			String parametersInString = Utils.serialize(rateRecordingRequest);
+			String parametersInString = KaraUtils.serialize(rateRecordingRequest);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 //			Log.i(GETGENRES, "content "+mainServer + GETGENRES);
@@ -325,7 +325,7 @@ public class Server {
 			int responseCode = httpResponse.getStatusLine().getStatusCode();
 //			Log.i(GETGENRES, "responseCode "+responseCode);
 //			Log.v(GETGENRES, "content "+content);
-			return Utils.deserialize(GetGenresResponse.class, content);
+			return KaraUtils.deserialize(GetGenresResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -343,7 +343,7 @@ public class Server {
 		//Log.i(GETGENRES, "content "+mainServer + GETTOPBOOK);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			//Log.i(GETGENRES, "content "+mainServer + GETTOPBOOK);
@@ -355,7 +355,7 @@ public class Server {
 			///Log.v(GETGENRES, "content "+content);
 			
 			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "CongBa.txt");
-			return Utils.deserialize(TopBooksResponse.class, content);
+			return KaraUtils.deserialize(TopBooksResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -373,7 +373,7 @@ public class Server {
 		//Log.i(GETGENRES, "content "+mainServer + GETBOOK);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			HttpResponse httpResponse = httpclient.execute(httppost);
@@ -384,7 +384,7 @@ public class Server {
 //			Log.v(GETGENRES, "content "+content);
 			
 			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "GetBookResponse.txt");
-			return Utils.deserialize(GetBookResponse.class, content);
+			return KaraUtils.deserialize(GetBookResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -402,7 +402,7 @@ public class Server {
 		Log.i(TAG, "url "+mainServer + GETNEWBOOKS);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			HttpResponse httpResponse = httpclient.execute(httppost);
@@ -413,7 +413,7 @@ public class Server {
 			Log.v(TAG, "content "+responseCode+" - "+content);
 			
 			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "NewBooksResponse.txt");
-			return Utils.deserialize(NewBooksResponse.class, content);
+			return KaraUtils.deserialize(NewBooksResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -449,7 +449,7 @@ public class Server {
 		Log.i(TAG, "url "+mainServer + GETCHAPTER+" "+recording.chapterId);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			HttpResponse httpResponse = httpclient.execute(httppost);
@@ -460,7 +460,7 @@ public class Server {
 //			Log.v(TAG, "content "+responseCode+" - "+content);
 			
 			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "GetChapterResponse.txt");
-			return Utils.deserialize(GetChapterResponse.class, content);
+			return KaraUtils.deserialize(GetChapterResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -478,7 +478,7 @@ public class Server {
 //		Log.i(GETGENRES, "responseCode "+recording.);
 		try {
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(recording);
+			String parametersInString = KaraUtils.serialize(recording);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			HttpResponse httpResponse = httpclient.execute(httppost);
@@ -489,7 +489,7 @@ public class Server {
 			Log.v(TAG, "content "+responseCode+" - "+content);
 			
 			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "GetHotAppsResponse.txt");
-			return Utils.deserialize(GetHotAppsResponse.class, content);
+			return KaraUtils.deserialize(GetHotAppsResponse.class, content);
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();

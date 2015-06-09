@@ -29,7 +29,7 @@ import com.ikaratruyen.model.NewBooksResponse;
 import com.ikaratruyen.utils.DigitalSignature;
 import com.ikaratruyen.utils.IKaraDbHelper;
 import com.ikaratruyen.utils.Server;
-import com.ikaratruyen.utils.Utils;
+import com.ikaratruyen.utils.KaraUtils;
 
 public class IGetBooksContentRequest extends AsyncTask<Void, Integer, String>{
 	
@@ -63,7 +63,7 @@ public class IGetBooksContentRequest extends AsyncTask<Void, Integer, String>{
 //		Log.i(TAG, "responseCode "+mainServer + GET_BOOK_CONTENT);
         try {
         	List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			String parametersInString = Utils.serialize(reuqest);
+			String parametersInString = KaraUtils.serialize(reuqest);
 			nameValuePairs.add(new BasicNameValuePair("parameters", DigitalSignature.encryption(parametersInString)));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "UTF-8"));
 			HttpResponse httpResponse = httpclient.execute(httppost);
