@@ -104,7 +104,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	private TextView fontBigButton;
 	private TextView fontSmallButton;
 	private ImageView bookHomeButton;
-	private SeekBar seek;
+	private SeekBar seekPage;
 	private LinearLayout topLL;
 	private LinearLayout bottomLL;
 	private SeekBar brightness_slider;
@@ -288,8 +288,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		imgChangeState.setOnClickListener(this);
 		topLL = (LinearLayout) findViewById(R.id.topMenuLL);
 		bottomLL = (LinearLayout) findViewById(R.id.bottomMenuLL);
-		seek = (SeekBar) findViewById(R.id.sk_page);
-		seek.setOnSeekBarChangeListener(this);
+		seekPage = (SeekBar) findViewById(R.id.sk_page);
+		seekPage.setOnSeekBarChangeListener(this);
 		fontBigButton = (TextView) findViewById(R.id.tv_increase);
 		fontSmallButton = (TextView) findViewById(R.id.tv_decrease);
 		tvIndex = (TextView)findViewById(R.id.tv_index);
@@ -585,11 +585,11 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 //		return (myMainView != null && myMainView.onKeyDown(keyCode, event))
 //				|| super.onKeyDown(keyCode, event);
 //	}
-
 	private PowerManager.WakeLock myWakeLock;
 	private boolean myWakeLockToCreate;
 
 	public final void createWakeLock() {
+//		Log.i(TAG, "createWakeLock");
 		if (myWakeLockToCreate) {
 			synchronized (this) {
 				if (myWakeLockToCreate) {
@@ -640,12 +640,12 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		// TODO Auto-generated method stub
 		final int page = progress + 1;
 		gotoPage(page);
-		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total + 1));
+		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
 	}
 	
 	public void stopLoading(){
 		Log.e(TAG, "stopLoading "+currentChapIndex);
-		seek.setMax(myFBReaderApp.getTextView().pagePosition().Total - 1);
+		seekPage.setMax(myFBReaderApp.getTextView().pagePosition().Total);
 		if (ISettings.getInstance().getChapListContents().get(currentChapIndex).volume != null) {
 			long volume = ISettings.getInstance().getChapListContents()
 					.get(currentChapIndex).volume;
@@ -658,12 +658,15 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		tvChapIndex.setText(getResources().getString(R.string.chapter_value)
 				+ " " + (currentChapIndex + 1));
 		
-		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total - 1));
+		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
 	}
 	
 	public void reloadPostition(){
-		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total - 1));
-		seek.setProgress(myFBReaderApp.getTextView().pagePosition().Current);
+		Log.e(TAG, "reloadPosition "+myFBReaderApp.getTextView().pagePosition().Current+" ");
+		int current = myFBReaderApp.getTextView().pagePosition().Current;
+		int max = myFBReaderApp.getTextView().pagePosition().Total;
+		tvIndex.setText(current + "/" + max);
+//		seek.setProgress(current);
 //		isBottomAndTopMenuShow = false;
 //		topLL.setVisibility(View.GONE);
 //		bottomLL.setVisibility(View.GONE);
@@ -691,7 +694,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		case R.id.img_back:
 //			stopNewService();
 //			saveIndexPage();
-			backPress();
+//			backPress();
 			finish();
 			break;
 

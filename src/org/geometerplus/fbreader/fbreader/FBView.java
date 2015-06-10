@@ -40,6 +40,11 @@ import org.geometerplus.zlibrary.text.view.ZLTextSelectionCursor;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.ZLTextWordRegionSoul;
 
+import com.ikaratruyen.IApplication;
+import com.yamin.reader.activity.CoreReadActivity;
+
+import android.util.Log;
+
 public final class FBView extends ZLTextView {
 	private FBReaderApp myReader;
 
@@ -562,6 +567,9 @@ public final class FBView extends ZLTextView {
 
 			context.setFillColor(fillColor);
 			context.fillRectangle(left + 1, height - 2 * lineWidth, gaugeInternalRight, lineWidth + 1);
+			
+			Log.e("FBView", "paint "+pagePosition.Current );
+//			((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).reloadPostition(pagePosition.Current);
 
 			if (reader.FooterOptions.ShowTOCMarks.getValue()) {
 				if (myTOCMarks == null) {

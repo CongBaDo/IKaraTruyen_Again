@@ -751,6 +751,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		int current = computeTextPageNumber(getCurrentCharNumber(PageIndex.current, false));
 		int total = computeTextPageNumber(sizeOfFullText());
 
+		Log.e(TAG, "pagePosition "+total);
 		if (total > 3) {
 			return new PagePosition(current, total);
 		}
