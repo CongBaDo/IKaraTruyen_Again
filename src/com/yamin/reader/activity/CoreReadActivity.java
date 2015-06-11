@@ -16,6 +16,7 @@ import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
+import org.geometerplus.fbreader.bookmodel.TOCTree;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.ChangeFontSizeAction;
 import org.geometerplus.fbreader.fbreader.ColorProfile;
@@ -24,6 +25,7 @@ import org.geometerplus.fbreader.fbreader.FBRreshAction;
 import org.geometerplus.fbreader.fbreader.SwitchProfileAction;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
+import org.geometerplus.zlibrary.core.view.ZLView;
 import org.geometerplus.zlibrary.text.view.ZLTextView;
 import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.application.ZLAndroidApplicationWindow;
@@ -256,6 +258,9 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 					myFBReaderApp);
 			myFBReaderApp.initWindow();
 		}
+		
+//		myFBReaderApp.PageTurningOptions.Animation.getValue().equals(ZLView.Animation.slide)
+		myFBReaderApp.PageTurningOptions.Animation.setValue(ZLView.Animation.shift);
 		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
 			new TextSearchPopup(myFBReaderApp);
 		}
@@ -661,19 +666,31 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
 	}
 	
+	private String makeProgressText(int page, int pagesNumber) {
+		final StringBuilder builder = new StringBuilder();
+		builder.append(page);
+		builder.append("/");
+		builder.append(pagesNumber);
+		final TOCTree tocElement = myFBReaderApp.getCurrentTOCElement();
+		if (tocElement != null) {
+			builder.append("  ");
+			builder.append(tocElement.getText());
+		}
+		return builder.toString();
+	}
+	
 	public void reloadPostition(){
 		Log.e(TAG, "reloadPosition "+myFBReaderApp.getTextView().pagePosition().Current+" ");
-		int current = myFBReaderApp.getTextView().pagePosition().Current;
-		int max = myFBReaderApp.getTextView().pagePosition().Total;
-		tvIndex.setText(current + "/" + max);
-//		seek.setProgress(current);
-//		isBottomAndTopMenuShow = false;
-//		topLL.setVisibility(View.GONE);
-//		bottomLL.setVisibility(View.GONE);
-//		topLL.startAnimation(AnimationUtils.loadAnimation(this,
-//				R.anim.layout_exit));
-//		bottomLL.startAnimation(AnimationUtils.loadAnimation(this,
-//				R.anim.layout_exit));
+//		tvIndex.setText(current + "/" + max);
+		
+//		final ZLTextView textView = myFBReaderApp.getTextView();
+//		final ZLTextView.PagePosition pagePosition = textView.pagePosition();
+//
+//		if (seekPage.getMax() != pagePosition.Total - 1 || seekPage.getProgress() != pagePosition.Current - 1) {
+//			seekPage.setMax(pagePosition.Total - 1);
+//			seekPage.setProgress(pagePosition.Current - 1);
+//			tvIndex.setText(makeProgressText(pagePosition.Current, pagePosition.Total));
+//		}
 	}
 
 	@Override
@@ -823,6 +840,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	@Override
 	public void onBackPressed(){
 		super.onBackPressed();
-		backPress();
+//		backPress();
+		finish();
 	}
 }
