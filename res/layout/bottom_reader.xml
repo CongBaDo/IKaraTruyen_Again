@@ -39,6 +39,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
                 android:scaleType="fitXY"
+                android:visibility="gone"
                 android:background="@drawable/icon_font_text"
                 android:contentDescription="@string/app_name"
                 android:padding="12dp" />
