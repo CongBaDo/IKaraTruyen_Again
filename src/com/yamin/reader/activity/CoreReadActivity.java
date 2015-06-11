@@ -1,7 +1,5 @@
 package com.yamin.reader.activity;
 
-import java.io.File;
-
 import org.geometerplus.android.fbreader.NavigationPopup;
 import org.geometerplus.android.fbreader.PopupPanel;
 import org.geometerplus.android.fbreader.SelectionPopup;
@@ -21,7 +19,6 @@ import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.ChangeFontSizeAction;
 import org.geometerplus.fbreader.fbreader.ColorProfile;
 import org.geometerplus.fbreader.fbreader.FBReaderApp;
-import org.geometerplus.fbreader.fbreader.FBRreshAction;
 import org.geometerplus.fbreader.fbreader.SwitchProfileAction;
 import org.geometerplus.zlibrary.core.filesystem.ZLFile;
 import org.geometerplus.zlibrary.core.options.ZLIntegerRangeOption;
@@ -33,20 +30,15 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
-import org.json.JSONObject;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,10 +48,7 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -76,9 +65,7 @@ import com.ikaratruyen.utils.IKaraDbHelper;
 import com.ikaratruyen.utils.ISettings;
 import com.ikaratruyen.utils.IkaraConstant;
 import com.ikaratruyen.utils.KaraUtils;
-import com.ikaratruyen.utils.Server;
 import com.yamin.reader.utils.ToolUtils;
-import com.yamin.reader.view.SwitchButton;
 
 /**
  * 
@@ -95,27 +82,19 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	public static final int REQUEST_CANCEL_MENU = 2;
 	private static final int NIGHT_UPDATEUI = 0;
 	private static final int DAY_UPDATEUI = 1;
-	private static final int GREEN_UPDATEUI = 2;
-	private static final int BROWN_UPDATEUI = 3;
 	public static final int RESULT_DO_NOTHING = RESULT_FIRST_USER;
 	public static final int RESULT_REPAINT = RESULT_FIRST_USER + 1;
-	private static final String PLUGIN_ACTION_PREFIX = "___";
 	private ZLIntegerRangeOption option;
-	private boolean isNight = false;
 	private ImageView imgChangeState;
 	private TextView fontBigButton;
 	private TextView fontSmallButton;
-	private ImageView bookHomeButton;
 	private SeekBar seekPage;
 	private LinearLayout topLL;
 	private LinearLayout bottomLL;
-	private SeekBar brightness_slider;
-	private SwitchButton dayornightSwitch;
-	private ScrollView popuMenuLL;
 	private TextView tvChapIndex, tvIndex, tvQuyenIndex;
-	private TextView tvIncrease, tvDecrease, tvChapIndexTop;
-	private LinearLayout navigation_settings;
+	private TextView tvChapIndexTop;
 	private String chapId;
+	private ImageView imgFontText;
 	private int readerState = IkaraConstant.READER_STATE.NIGHT;
 	private Handler mHandler = new Handler() {
 
@@ -137,29 +116,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 						R.color.main_bg_1));
 				break;
 
-//			case BROWN_UPDATEUI:
-//				myFBReaderApp.runAction(ActionCode.SWITCH_TO_BG3,
-//						new SwitchProfileAction(myFBReaderApp,
-//								ColorProfile.THIRD));
-//				myFBReaderApp.runAction(ActionCode.JUST_REFRESH,
-//						new FBRreshAction(myFBReaderApp, 0));
-//				topLL.setBackgroundColor(getResources().getColor(
-//						R.color.main_bg_3));
-//				bottomLL.setBackgroundColor(getResources().getColor(
-//						R.color.main_bg_3));
-//				break;
-//			case GREEN_UPDATEUI:
-//				myFBReaderApp.runAction(ActionCode.SWITCH_TO_BG2,
-//						new SwitchProfileAction(myFBReaderApp,
-//								ColorProfile.SECOND));
-//				myFBReaderApp.runAction(ActionCode.JUST_REFRESH,
-//						new FBRreshAction(myFBReaderApp, 0));
-//
-//				topLL.setBackgroundColor(getResources().getColor(
-//						R.color.main_bg_2));
-//				bottomLL.setBackgroundColor(getResources().getColor(
-//						R.color.main_bg_2));
-//				break;
 			}
 			super.handleMessage(msg);
 		}
@@ -172,7 +128,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	private FBReaderApp myFBReaderApp;
 	private volatile Book myBook;
 
-	private RelativeLayout myRootView;
 	private ZLAndroidWidget myMainView;
 	private boolean isBottomAndTopMenuShow = false;
 	private String chapTitle;
@@ -191,7 +146,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		if (myBook == null) {
 			
 			String path ;//= Environment.getExternalStorageDirectory().getAbsolutePath() +"/nemodotest.fb2";
-			path = KaraUtils.getChapContentFromSdcard(bookId, currentChapIndex+1);
+			path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
 			Log.e(TAG, "openBook "+path);
 			if(path == null){
 				loadChapContent(chapId);
@@ -226,7 +181,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		Log.e(TAG, "onCreate");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.core_main);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
@@ -240,10 +194,13 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		chapId = getIntent().getExtras().getString("chap_id");
 		
 		
-		Log.v(TAG, "oncreate "+chapTitle +" "+bookId+" "+chapId);
-		//
+		Log.v(TAG, "oncreate "+chapTitle +" chapTitle "+chapTitle+" CHAPID "+chapId+" BOOKTITLE "+bookTitle);
+
+		chapTitle = getCurrentChapter(chapId).title;
+		Log.v(TAG, "oncreate " +" chapTitle "+chapTitle);
 		option = ZLTextStyleCollection.Instance().getBaseStyle().FontSizeOption;
-		//
+		ZLTextStyleCollection.Instance().getBaseStyle().getFontFamily();
+		
 		myFBReaderApp = (FBReaderApp) FBReaderApp.Instance();
 		if (myFBReaderApp == null) {
 			myFBReaderApp = new FBReaderApp(CoreReadActivity.this,
@@ -259,7 +216,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 			myFBReaderApp.initWindow();
 		}
 		
-//		myFBReaderApp.PageTurningOptions.Animation.getValue().equals(ZLView.Animation.slide)
 		myFBReaderApp.PageTurningOptions.Animation.setValue(ZLView.Animation.shift);
 		if (myFBReaderApp.getPopupById(TextSearchPopup.ID) == null) {
 			new TextSearchPopup(myFBReaderApp);
@@ -287,7 +243,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 
 	/** Init UI View*/
 	public void initView() {
-		myRootView = (RelativeLayout) findViewById(R.id.root_view);
 		myMainView = (ZLAndroidWidget) findViewById(R.id.main_view);
 		imgChangeState = (ImageView)findViewById(R.id.img_change_state_reader);
 		imgChangeState.setOnClickListener(this);
@@ -297,6 +252,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		seekPage.setOnSeekBarChangeListener(this);
 		fontBigButton = (TextView) findViewById(R.id.tv_increase);
 		fontSmallButton = (TextView) findViewById(R.id.tv_decrease);
+		imgFontText = (ImageView)findViewById(R.id.img_font_text);
+		imgFontText.setOnClickListener(this);
 		tvIndex = (TextView)findViewById(R.id.tv_index);
 		((ImageView) findViewById(R.id.img_back)).setOnClickListener(this);
 		((ImageView) findViewById(R.id.img_share)).setOnClickListener(this);
@@ -333,14 +290,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 						R.color.main_bg_2));
 				bottomLL.setBackgroundColor(getResources().getColor(
 						R.color.main_bg_2));
-
-			} else if (myFBReaderApp.getColorProfileName() != null
-					&& myFBReaderApp.getColorProfileName().equals(
-							ColorProfile.THIRD)) {
-				topLL.setBackgroundColor(getResources().getColor(
-						R.color.main_bg_3));
-				bottomLL.setBackgroundColor(getResources().getColor(
-						R.color.main_bg_3));
 			} else {
 				topLL.setBackgroundColor(getResources().getColor(
 						R.color.main_bg_1));
@@ -500,10 +449,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		Log.i("MAIN", "" + myFBReaderApp.getTextView().getEndCursor() +" "+myBook.getId());
 		myFBReaderApp.Collection.storePosition(myBook.getId(), myFBReaderApp
 				.getTextView().getEndCursor());
-		startActivity(new Intent(CoreReadActivity.this, MainActivity.class));
-		CoreReadActivity.this.overridePendingTransition(R.anim.activity_enter,
-				R.anim.activity_exit);
-		CoreReadActivity.this.finish();
+		finish();
 	}
 
 	public void showSelectionPanel() {
@@ -531,6 +477,20 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 
 		case REQUEST_CANCEL_MENU:
 			myFBReaderApp.runCancelAction(resultCode - 1);
+			break;
+			
+		case 100:
+			
+			if(resultCode == IChapListActivity.CHAPTER){
+				currentChapIndex = data.getIntExtra("chap_index", 0);
+				tvChapIndexTop.setText((currentChapIndex + 1) + "");
+				chapTitle = data.getStringExtra("chap_title");
+				chapId = data.getStringExtra("chap_id");
+				loadChapContent(chapId);
+			}else{
+				
+			}
+			
 			break;
 		}
 	}
@@ -649,7 +609,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	}
 	
 	public void stopLoading(){
-		Log.e(TAG, "stopLoading "+currentChapIndex);
+//		Log.e(TAG, "stopLoading "+currentChapIndex);
 		seekPage.setMax(myFBReaderApp.getTextView().pagePosition().Total);
 		if (ISettings.getInstance().getChapListContents().get(currentChapIndex).volume != null) {
 			long volume = ISettings.getInstance().getChapListContents()
@@ -679,8 +639,43 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		return builder.toString();
 	}
 	
+	public void loadNextChap(boolean isNext, boolean isBack){
+		
+		Log.v(TAG, "loadNextChap "+isNext +" "+isBack);
+		if(!isBack){
+			if(currentChapIndex > 0){
+   			 	currentChapIndex--;
+   			 	loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+   		 	}
+		}
+		
+		if(!isNext){
+			currentChapIndex++;
+			if(currentChapIndex < ISettings.getInstance().getChapListContents().size()){
+				loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+			}
+		}
+		
+//		if(swipeType == IkaraConstant.SWIPE.LEFT){
+//			Log.v(TAG, "LEFT EFT");
+//			if(currentChapIndex > 0){
+//    			 currentChapIndex--;
+//    			 loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+//    		 }
+//		}else if(swipeType == IkaraConstant.SWIPE.RIGHT){
+//			Log.e(TAG, "RIGHT RUGHT ");
+//			pageIndex = 0;
+//			currentChapIndex++;
+//			if(currentChapIndex < ISettings.getInstance().getChapListContents().size()){
+//				loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+//			}else{
+//				currentChapIndex--;
+//			}
+//		}
+	}
+	
 	public void reloadPostition(){
-		Log.e(TAG, "reloadPosition "+myFBReaderApp.getTextView().pagePosition().Current+" ");
+//		Log.e(TAG, "reloadPosition "+myFBReaderApp.getTextView().pagePosition().Current+" ");
 //		tvIndex.setText(current + "/" + max);
 		
 //		final ZLTextView textView = myFBReaderApp.getTextView();
@@ -709,10 +704,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.img_back:
-//			stopNewService();
-//			saveIndexPage();
-//			backPress();
-			finish();
+			backPress();
+			
 			break;
 
 		case R.id.tv_chap_top:
@@ -735,7 +728,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				Message message = new Message();
 				message.what = NIGHT_UPDATEUI;
 				mHandler.sendMessage(message);
-				isNight = true;
 			}else{
 				readerState = IkaraConstant.READER_STATE.DAY;
 				myFBReaderApp.runAction(
@@ -745,7 +737,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				Message message = new Message();
 				message.what = DAY_UPDATEUI;
 				mHandler.sendMessage(message);
-				isNight = false;
 			}
 			break;
 
@@ -777,64 +768,35 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	 * @param id is chapId*/
 	private void loadChapContent(String id) {
 		Log.v(TAG, "loadChapContent "+id+" "+currentChapIndex);
-//		showLoading();
 
 		chapTitle = getCurrentChapter(id).title;
-		
-//		Log.d(TAG, "Chap Title "+chapTitle);
-//		if(IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, 0) != null && IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, 0).length() > 0){
-//			if(isOpenBook){
-//				isOpenBook = false;
-////				processOpenWithIndex();
-//			}
-//			
-//			String content = IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, currentChapIndex);
-//			try {
-//				content = Server.decompress(content);
-//				JSONObject json = new JSONObject(content);
-//				content = json.optString("content");
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-////			processChapContent(content);
-////			hideLoading();
-//			
-//			chapId = id;
-//		}else{
 			
-			GetChapterRequest request = new GetChapterRequest();
-			if (isOpenBook) {
-				isOpenBook = false;
-//				processOpenWithIndex();
-			} else {
-				chapId = id;
+		GetChapterRequest request = new GetChapterRequest();
+		if (isOpenBook) {
+			isOpenBook = false;
+		} else {
+			chapId = id;
+		}
+		request.chapterId = chapId;
+		request.language = "vi";
+		new IGetChapterRequest(new IChapterPostCallBack() {
+
+			@Override
+			public void onResultChapterPostPost(GetChapterResponse statusObj) {
+				// TODO Auto-generated method stub
+				Log.v(TAG, "onResuktChapterPost "+chapTitle+" "+bookTitle);
+				KaraUtils.saveChapContent2SDCard(bookTitle, bookId, chapTitle, currentChapIndex+1, statusObj.chapter.content);
+				String path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+				myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+				myFBReaderApp.openBook(myBook, null, null);
 			}
-			request.chapterId = chapId;
-			request.language = "vi";
-			new IGetChapterRequest(new IChapterPostCallBack() {
 
-				@Override
-				public void onResultChapterPostPost(GetChapterResponse statusObj) {
-					// TODO Auto-generated method stub
-					Log.v(TAG, "onResuktChapterPost "+statusObj.chapter.title);
-//					processChapContent(statusObj.chapter.content);
-//					
-//					processOpenWithIndex();
-//					hideLoading();
-					KaraUtils.saveChapContent2SDCard(bookId, currentChapIndex+1, statusObj.chapter.content);
-					String path = KaraUtils.getChapContentFromSdcard(bookId, currentChapIndex+1);
-					myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
-					myFBReaderApp.openBook(myBook, null, null);
-				}
+			@Override
+			public void fail() {
+				// TODO Auto-generated method stub
 
-				@Override
-				public void fail() {
-					// TODO Auto-generated method stub
-
-				}
-			}, request).execute();
-//		}
+			}
+		}, request).execute();
 	}
 	
 	@Override
@@ -842,5 +804,12 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		super.onBackPressed();
 //		backPress();
 		finish();
+	}
+	
+	private void saveIndexPage() {
+		String savedIndex = chapId + ";" + myFBReaderApp.getTextView().pagePosition().Current;
+		Log.w(TAG, "saveIndexPage " + savedIndex);
+		IKaraDbHelper.getInstance(getApplicationContext())
+				.addToSavedIndexTable(bookId, savedIndex);
 	}
 }

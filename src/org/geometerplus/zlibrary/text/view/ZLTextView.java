@@ -283,7 +283,6 @@ public abstract class ZLTextView extends ZLTextViewBase {
 					myNextPage.StartCursor.setCursor(myCurrentPage.EndCursor);
 					myNextPage.PaintState = PaintStateEnum.START_IS_KNOWN;
 					Application.getViewWidget().reset();
-//					Application.g
 				}
 				((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).reloadPostition();
 				break;
@@ -751,7 +750,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 		int current = computeTextPageNumber(getCurrentCharNumber(PageIndex.current, false));
 		int total = computeTextPageNumber(sizeOfFullText());
 
-		Log.e(TAG, "pagePosition "+total);
+//		Log.e(TAG, "pagePosition "+total);
 		if (total > 3) {
 			return new PagePosition(current, total);
 		}
@@ -1716,18 +1715,24 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	@Override
 	public boolean canScroll(PageIndex index) {
+		
 		switch (index) {
 			default:
 				return true;
 			case next:
 			{
 				final ZLTextWordCursor cursor = getEndCursor();
-				return cursor != null && !cursor.isNull() && !cursor.isEndOfText();
+				boolean isNext = cursor != null && !cursor.isNull() && !cursor.isEndOfText();
+				//Log.v(TAG, "canScroll "+index.name()+" "+index.current+" "+isNext);
+				((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).loadNextChap(isNext, true);
+				return isNext;
 			}
 			case previous:
 			{
 				final ZLTextWordCursor cursor = getStartCursor();
-				return cursor != null && !cursor.isNull() && !cursor.isStartOfText();
+				boolean isBack = cursor != null && !cursor.isNull() && !cursor.isStartOfText();
+				((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).loadNextChap(true, isBack);
+				return isBack;
 			}
 		}
 	}

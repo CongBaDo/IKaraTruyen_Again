@@ -27,7 +27,10 @@ import org.geometerplus.zlibrary.core.xml.ZLStringMap;
 import org.geometerplus.zlibrary.core.xml.ZLXMLReaderAdapter;
 import org.geometerplus.zlibrary.text.model.ZLTextAlignmentType;
 
+import android.util.Log;
+
 public class ZLTextStyleCollection {
+	private static final String TAG = "ZLTextStyleCollection";
 	private static ZLTextStyleCollection ourInstance = null;
 
 	public static ZLTextStyleCollection Instance() {
@@ -51,6 +54,7 @@ public class ZLTextStyleCollection {
 		new ZLBooleanOption("Style", "css:fontSize", true);
 
 	private ZLTextStyleCollection() {
+		Log.e(TAG, "ZLTextStyleCollection");
 		new TextStyleReader(this).readQuietly(ZLResourceFile.createResourceFile("default/styles.xml"));
 	}
 

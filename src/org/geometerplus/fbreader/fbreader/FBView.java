@@ -568,7 +568,7 @@ public final class FBView extends ZLTextView {
 			context.setFillColor(fillColor);
 			context.fillRectangle(left + 1, height - 2 * lineWidth, gaugeInternalRight, lineWidth + 1);
 			
-			Log.e("FBView", "paint "+pagePosition.Current );
+//			Log.e("FBView", "paint "+pagePosition.Current );
 //			((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).reloadPostition(pagePosition.Current);
 
 			if (reader.FooterOptions.ShowTOCMarks.getValue()) {

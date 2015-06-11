@@ -19,6 +19,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ikaratruyen.BuildConfig;
@@ -30,6 +31,9 @@ import com.ikaratruyen.utils.IkaraConstant.DEVICETYPE;
 
 
 public class KaraUtils {
+	
+	private static final String TAG = "KaraUtils";
+	
 	private static final Logger log = Logger.getLogger(KaraUtils.class
 			.getName());
 	static ObjectMapper mapper = new ObjectMapper();
@@ -43,13 +47,18 @@ public class KaraUtils {
 	      return result;
 	}  
 	
-	private static String createLocalPath(String bookName){
-		String path = Environment.getExternalStorageDirectory() + "/" + IApplication.getInstance().packageName + "/" + bookName;
+	private static String createLocalPath(String bookId){
+		bookId = bookId.replaceAll("/", "");
+		String path = Environment.getExternalStorageDirectory() + "/Android/data/" + IApplication.getInstance().packageName + "/" + bookId;
 		return path;
 	}
 	
-	public static String getChapContentFromSdcard(String bookName, int chapIndex){
-		String path = Environment.getExternalStorageDirectory() + "/" + IApplication.getInstance().packageName + "/" + bookName+"/chap_"+chapIndex+".fb2";
+	/**
+	 * @param bookId
+	 * @param chapIndex*/
+	public static String getChapPathFromSdcard(String bookId, int chapIndex){
+		bookId = bookId.replaceAll("/", "");
+		String path = Environment.getExternalStorageDirectory() + "/Android/data/" + IApplication.getInstance().packageName + "/" + bookId+"/chap_"+chapIndex+".fb2";
 		
 		File pathFile = new File(path);
 		if(pathFile.exists()){
@@ -59,8 +68,14 @@ public class KaraUtils {
 		}
 	}
 	
-	public static void saveChapContent2SDCard(String bookName, int chapIndex, String content){
-		String path = createLocalPath(bookName);
+	/**
+	 * @param bookName
+	 * @param bookId
+	 * @param chapTitle
+	 * @param chapIndex
+	 * @param content*/
+	public static void saveChapContent2SDCard(String bookName, String bookId, String chapTitle, int chapIndex, String content){
+		String path = createLocalPath(bookId);
 		
 		try{
 			File filePath = new File(path);
@@ -68,7 +83,7 @@ public class KaraUtils {
 				filePath.mkdirs();
 			}
 			
-			content = convert2Html(content);
+			content = convert2Html(chapTitle, bookName, content);
 			
 			String fileName = "chap_"+chapIndex+".fb2";
 			File myFile = new File(path + File.separator + "/"+fileName);
@@ -81,10 +96,20 @@ public class KaraUtils {
 		}catch(Exception e){}
 	}
 	
-	private static String convert2Html(String originalText){
+	private static String convert2Html(String chapTitle, String bookName, String originalText){
+		Log.d(TAG, "convert2Html "+bookName);
+		
 		String results = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
-		results = results + "\n";
 		results = results + "<body>";
+		results = results + "<empty-line/>";
+		results = results + "<title><p>"+ bookName +"</p></title>";
+		results = results + "<empty-line/>";
+		results = results + "<subtitle><p>"+ chapTitle +"</p></subtitle>";
+		results = results + "<empty-line/>";
+		results = results + "<empty-line/>";
+		results = results + "<empty-line/>";
+		results = results + "<empty-line/>";
+		results = results + "<empty-line/>";
 		String[] lines = originalText.split(System.getProperty("line.separator"));
 		
 		for(int i = 0; i < lines.length; i++){

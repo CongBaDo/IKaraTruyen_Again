@@ -145,12 +145,12 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
 					myBitmapManager.shift(index == ZLView.PageIndex.next);
 					view.onScrollingFinished(index);
 					ZLApplication.Instance().onRepaintFinished();
-					Log.e("ZLAndroidWidget", "onDrawInScrolling index "+index);
+//					Log.e("ZLAndroidWidget", "onDrawInScrolling index "+index);
 					break;
 				}
 				case AnimatedScrollingBackward:
 					view.onScrollingFinished(ZLView.PageIndex.current);
-					Log.i("ZLAndroidWidget", "onDrawInScrolling index "+ZLView.PageIndex.current);
+//					Log.i("ZLAndroidWidget", "onDrawInScrolling index "+ZLView.PageIndex.current);
 					break;
 			}
 			onDrawStatic(canvas);
@@ -260,7 +260,7 @@ public class ZLAndroidWidget extends View implements ZLViewWidget, View.OnLongCl
 	}
 
 	private void onDrawStatic(final Canvas canvas) {
-		Log.e("ZLAndroidWidget", "onDrawStatic");
+//		Log.e("ZLAndroidWidget", "onDrawStatic");
 //		((CoreReadActivity)IApplication.getInstance().getCurrentActivity()).reloadPostition();
 		myBitmapManager.setSize(getWidth(), getMainAreaHeight());
 		canvas.drawBitmap(myBitmapManager.getBitmap(ZLView.PageIndex.current), 0, 0, myPaint);
