@@ -154,7 +154,7 @@
             android:orientation="horizontal" >
 
             <ProgressBar
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:id="@+id/prg_download"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="@dimen/img_total_w"

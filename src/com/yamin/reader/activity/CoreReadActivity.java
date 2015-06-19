@@ -95,6 +95,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	private TextView tvChapIndexTop;
 	private String chapId;
 	private ImageView imgFontText;
+	private int currentIndexOfChap = 0;
 	private int readerState = IkaraConstant.READER_STATE.NIGHT;
 	private Handler mHandler = new Handler() {
 
@@ -146,14 +147,27 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		if (myBook == null) {
 			
 			String path ;//= Environment.getExternalStorageDirectory().getAbsolutePath() +"/nemodotest.fb2";
-			path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
-			Log.e(TAG, "openBook "+path);
-			if(path == null){
-				loadChapContent(chapId);
-			}else{
-				this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
-			}
 			
+			if(isOpenBook){
+				String saveInfo = IKaraDbHelper.getInstance(getApplicationContext()).getSavedInfo(bookId);
+				chapId = saveInfo.split(";")[0];
+				currentIndexOfChap = Integer.parseInt(saveInfo.split(";")[1]);
+				currentChapIndex = Integer.parseInt(saveInfo.split(";")[2]);
+				
+//				currentChapIndex = KaraUtils.ge
+				
+				path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+				Log.e(TAG, "oncreate save Info "+chapId+" "+currentChapIndex);
+				this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+			}else{
+				path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+				Log.i(TAG, "openBook "+path);
+				if(path == null){
+					loadChapContent(chapId);
+				}else{
+					this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+				}
+			}
 		}
 		myFBReaderApp.openBook(myBook, null, action);
 	}
@@ -239,6 +253,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				new ShowNavigationAction(this, myFBReaderApp));
 		initView();
 		setListener();
+		
+		
 	}
 
 	/** Init UI View*/
@@ -655,23 +671,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
 			}
 		}
-		
-//		if(swipeType == IkaraConstant.SWIPE.LEFT){
-//			Log.v(TAG, "LEFT EFT");
-//			if(currentChapIndex > 0){
-//    			 currentChapIndex--;
-//    			 loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
-//    		 }
-//		}else if(swipeType == IkaraConstant.SWIPE.RIGHT){
-//			Log.e(TAG, "RIGHT RUGHT ");
-//			pageIndex = 0;
-//			currentChapIndex++;
-//			if(currentChapIndex < ISettings.getInstance().getChapListContents().size()){
-//				loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
-//			}else{
-//				currentChapIndex--;
-//			}
-//		}
 	}
 	
 	public void reloadPostition(){
@@ -705,7 +704,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		switch (v.getId()) {
 		case R.id.img_back:
 			backPress();
-			
+			saveIndexPage();
 			break;
 
 		case R.id.tv_chap_top:
@@ -774,29 +773,30 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		GetChapterRequest request = new GetChapterRequest();
 		if (isOpenBook) {
 			isOpenBook = false;
+			
 		} else {
 			chapId = id;
+			request.chapterId = chapId;
+			request.language = "vi";
+			new IGetChapterRequest(new IChapterPostCallBack() {
+				
+				@Override
+				public void onResultChapterPostPost(GetChapterResponse statusObj) {
+					// TODO Auto-generated method stub
+					Log.v(TAG, "onResuktChapterPost "+chapTitle+" "+bookTitle);
+					KaraUtils.saveChapContent2SDCard(bookTitle, bookId, chapTitle, currentChapIndex+1, statusObj.chapter.content);
+					String path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+					myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+					myFBReaderApp.openBook(myBook, null, null);
+				}
+				
+				@Override
+				public void fail() {
+					// TODO Auto-generated method stub
+					
+				}
+			}, request).execute();
 		}
-		request.chapterId = chapId;
-		request.language = "vi";
-		new IGetChapterRequest(new IChapterPostCallBack() {
-
-			@Override
-			public void onResultChapterPostPost(GetChapterResponse statusObj) {
-				// TODO Auto-generated method stub
-				Log.v(TAG, "onResuktChapterPost "+chapTitle+" "+bookTitle);
-				KaraUtils.saveChapContent2SDCard(bookTitle, bookId, chapTitle, currentChapIndex+1, statusObj.chapter.content);
-				String path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
-				myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
-				myFBReaderApp.openBook(myBook, null, null);
-			}
-
-			@Override
-			public void fail() {
-				// TODO Auto-generated method stub
-
-			}
-		}, request).execute();
 	}
 	
 	@Override
@@ -807,7 +807,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	}
 	
 	private void saveIndexPage() {
-		String savedIndex = chapId + ";" + myFBReaderApp.getTextView().pagePosition().Current;
+		String savedIndex = chapId + ";" + myFBReaderApp.getTextView().pagePosition().Current+";"+currentChapIndex;
 		Log.w(TAG, "saveIndexPage " + savedIndex);
 		IKaraDbHelper.getInstance(getApplicationContext())
 				.addToSavedIndexTable(bookId, savedIndex);

@@ -79,7 +79,7 @@ public class IGetBooksContentRequest extends AsyncTask<Void, Integer, String>{
 	    				i++;
 	    				//Log.d(TAG, "index "+i);
 	    				publishProgress(i);
-	    				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTableFollowId(reuqest.bookId, line);
+//	    				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTableFollowId(reuqest.bookId, line);
 	    			} catch (Exception e) {
 	    				// TODO Auto-generated catch block
 	    				e.printStackTrace();

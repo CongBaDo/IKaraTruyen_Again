@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Chapter implements Serializable{
+	public int index;
 	public String _id;
 	public Long number;
 	public String title;

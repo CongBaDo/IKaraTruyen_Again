@@ -64,7 +64,7 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 	private static final String COL_ID						= "id";
 	private static final String COL_CHAP_ID					= "chap_id";
 	private static final String COL_CHAP_TITLE				= "chap_title";
-	private static final String COL_CHAP_CONTENT			= "chap_content";
+	private static final String COL_CHAP_INDEX				= "chap_index";
 	private static final String COL_CHAP_DOWNLOAD			= "chap_downloaded";
 	
 
@@ -143,14 +143,14 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void addRowBookTableFollowId(Book book, Chapter item){
+	public void addChapRowIntoBookTable(Book book, Chapter item, int index){
 		
 		String bookId = getBookId(book._id);
 		
 		ContentValues values = new ContentValues();
-		values.put(COL_CHAP_CONTENT, "");
 		values.put(COL_CHAP_ID, item._id);
 		values.put(COL_CHAP_TITLE, item.title);
+		values.put(COL_CHAP_INDEX, index);
 		values.put(COL_CHAP_DOWNLOAD, "0");
 		try {
 			SQLiteDatabase db = this.getWritableDatabase();
@@ -162,21 +162,20 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void addRowBookTableFollowId(String bookId, String chapContent){
-		
-		bookId = getBookId(bookId);
-		
-		ContentValues values = new ContentValues();
-		values.put(COL_CHAP_CONTENT, chapContent);
-		try {
-			SQLiteDatabase db = this.getWritableDatabase();
-			db.insert((PREFIX_TABLE+bookId), null, values);
-			db.close();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-	}
+//	public void addRowBookTableFollowId(String bookId){
+//		
+//		bookId = getBookId(bookId);
+//		
+//		ContentValues values = new ContentValues();
+//		try {
+//			SQLiteDatabase db = this.getWritableDatabase();
+//			db.insert((PREFIX_TABLE+bookId), null, values);
+//			db.close();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public int getBookSize(String bookId) {
 		bookId = getBookId(bookId);
@@ -213,10 +212,10 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 					do {
 						Chapter item = new Chapter();
 						item._id = cursor.getString(cursor.getColumnIndex(COL_CHAP_ID));
-						item.content = cursor.getString(cursor.getColumnIndex(COL_CHAP_CONTENT));
 						if(cursor.getString(cursor.getColumnIndex(COL_CHAP_DOWNLOAD)).equals("1")){
 							item.downloaded = true;
 						}
+						item.index = cursor.getInt(cursor.getColumnIndex(COL_CHAP_INDEX));
 						item.title = cursor.getString(cursor.getColumnIndex(COL_CHAP_TITLE));
 						
 						items.add(item);
@@ -234,10 +233,9 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 	}
 
 	
-//	public void updateRowBookTableFollowId(String bookId, Chapter item){
-//		bookId = getBookId(bookId);
+	public void addRowBookTable(String bookId, Chapter item){
+		bookId = getBookId(bookId);
 //		ContentValues values = new ContentValues();
-//		values.put(COL_CHAP_CONTENT, item.content);
 //		values.put(COL_CHAP_DOWNLOAD, "1");
 //		try {
 //			SQLiteDatabase db = this.getWritableDatabase();
@@ -247,56 +245,72 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 //			// TODO: handle exception
 //			e.printStackTrace();
 //		}
+//		
+//		String bookId = getBookId(book._id);
+		
+		ContentValues values = new ContentValues();
+		values.put(COL_CHAP_ID, item._id);
+		values.put(COL_CHAP_TITLE, item.title);
+		values.put(COL_CHAP_INDEX, item.index);
+		values.put(COL_CHAP_DOWNLOAD, "0");
+		try {
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.insert((PREFIX_TABLE+bookId), null, values);
+			db.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+
+//	public String getChapContent(String bookId, int index){
+//		bookId = getBookId(bookId);
+//		
+//		String value = "";
+//		try {
+//			SQLiteDatabase db = this.getWritableDatabase();
+//			Cursor cursor = db.rawQuery("select * from " + (PREFIX_TABLE + bookId) , new String[] {});
+//			
+//			if (cursor != null) {
+//				cursor.moveToPosition(index);
+//				value = cursor.getString(cursor.getColumnIndex(COL_CHAP_CONTENT));
+//			}
+//			cursor.close();
+//			db.close();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//		
+//		return value;
 //	}
-
-	public String getChapContent(String bookId, int index){
-		bookId = getBookId(bookId);
-		
-		String value = "";
-		try {
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery("select * from " + (PREFIX_TABLE + bookId) , new String[] {});
-			
-			if (cursor != null) {
-				cursor.moveToPosition(index);
-				value = cursor.getString(cursor.getColumnIndex(COL_CHAP_CONTENT));
-			}
-			cursor.close();
-			db.close();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-		
-		return value;
-	}
 	
-	public Chapter getChapterInfo(String bookId, String chapId) {
-		
-		bookId = getBookId(bookId);
-		try {
-			SQLiteDatabase db = this.getWritableDatabase();
-			Cursor cursor = db.rawQuery("select * from " + (PREFIX_TABLE + bookId) + " where " + COL_CHAP_ID + "= ? ", new String[] { chapId});
-			// result = cursor != null && cursor.getCount() > 0;
-			if (cursor != null && cursor.moveToFirst()) {
-				Chapter item = new Chapter();
-				item._id = cursor.getString(cursor.getColumnIndex(COL_CHAP_ID));
-				item.title = cursor.getString(cursor.getColumnIndex(COL_CHAP_TITLE));
-				item.content =   cursor.getString(cursor.getColumnIndex(COL_CHAP_CONTENT));
-				if(cursor.getString(cursor.getColumnIndex(COL_CHAP_DOWNLOAD)).equals("1")){
-					item.downloaded = true;
-				}
-				return item;
-			}
-			cursor.close();
-			db.close();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-
-		return null;
-	}
+//	public Chapter getChapterInfo(String bookId, String chapId) {
+//		
+//		bookId = getBookId(bookId);
+//		try {
+//			SQLiteDatabase db = this.getWritableDatabase();
+//			Cursor cursor = db.rawQuery("select * from " + (PREFIX_TABLE + bookId) + " where " + COL_CHAP_ID + "= ? ", new String[] { chapId});
+//			// result = cursor != null && cursor.getCount() > 0;
+//			if (cursor != null && cursor.moveToFirst()) {
+//				Chapter item = new Chapter();
+//				item._id = cursor.getString(cursor.getColumnIndex(COL_CHAP_ID));
+//				item.title = cursor.getString(cursor.getColumnIndex(COL_CHAP_TITLE));
+////				item.content =   cursor.getString(cursor.getColumnIndex(COL_CHAP_CONTENT));
+//				if(cursor.getString(cursor.getColumnIndex(COL_CHAP_DOWNLOAD)).equals("1")){
+//					item.downloaded = true;
+//				}
+//				return item;
+//			}
+//			cursor.close();
+//			db.close();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
+//
+//		return null;
+//	}
 	
 	private String getBookId(String bookId){
 		String value = bookId;
@@ -319,10 +333,10 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 		try {
 			db.execSQL("CREATE TABLE IF NOT EXISTS " + (PREFIX_TABLE+bookId) + " (" 
 					+ COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " 
-					+ COL_CHAP_CONTENT + " TEXT )"
-//					+ COL_CHAP_ID + " TEXT , "
-//					+ COL_CHAP_TITLE + " TEXT , "
-//					+ COL_CHAP_DOWNLOAD + " TEXT )"
+					+ COL_CHAP_ID + " TEXT , "
+					+ COL_CHAP_TITLE + " TEXT , "
+					+ COL_CHAP_DOWNLOAD + " TEXT , "
+					+ COL_CHAP_INDEX + " TEXT )"
 					);
 			db.close();
 		} catch (Exception e) {

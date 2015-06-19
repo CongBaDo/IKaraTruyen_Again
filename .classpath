@@ -10,7 +10,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/listviewanimations_lib-core_3.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/listviewanimations_lib-manipulation_3.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/nineoldandroids-2.2.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/splunk-mint-4.1-javadoc.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/splunk-mint-4.1.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="src"/>

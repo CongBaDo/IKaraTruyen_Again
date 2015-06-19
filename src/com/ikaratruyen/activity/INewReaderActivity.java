@@ -294,57 +294,57 @@ public class INewReaderActivity extends Activity implements OnClickListener,
 		chapTitle = getCurrentChapter(id).title;
 		
 		Log.d(TAG, "Chap Title "+chapTitle);
-		if(IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, 0) != null && IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, 0).length() > 0){
-			if(isOpenBook){
-				swipeType = IkaraConstant.SWIPE.NONE;
-				isOpenBook = false;
-				processOpenWithIndex();
-			}
-			
-			String content = IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, currentChapIndex);
-			try {
-				content = Server.decompress(content);
-				JSONObject json = new JSONObject(content);
-				content = json.optString("content");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			processChapContent(content);
-			hideLoading();
-			
-			chapId = id;
-		}else{
-			pageIndex = 0;
-			
-			GetChapterRequest request = new GetChapterRequest();
-			if (isOpenBook) {
-				isOpenBook = false;
-				processOpenWithIndex();
-			} else {
-				chapId = id;
-			}
-			request.chapterId = chapId;
-			request.language = "vi";
-			new IGetChapterRequest(new IChapterPostCallBack() {
-
-				@Override
-				public void onResultChapterPostPost(GetChapterResponse statusObj) {
-					// TODO Auto-generated method stub
-
-					processChapContent(statusObj.chapter.content);
-					
-					processOpenWithIndex();
-					hideLoading();
-				}
-
-				@Override
-				public void fail() {
-					// TODO Auto-generated method stub
-
-				}
-			}, request).execute();
-		}
+//		if(IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, 0) != null && IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, 0).length() > 0){
+//			if(isOpenBook){
+//				swipeType = IkaraConstant.SWIPE.NONE;
+//				isOpenBook = false;
+//				processOpenWithIndex();
+//			}
+//			
+//			String content = IKaraDbHelper.getInstance(getApplicationContext()).getChapContent(bookId, currentChapIndex);
+//			try {
+//				content = Server.decompress(content);
+//				JSONObject json = new JSONObject(content);
+//				content = json.optString("content");
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			processChapContent(content);
+//			hideLoading();
+//			
+//			chapId = id;
+//		}else{
+//			pageIndex = 0;
+//			
+//			GetChapterRequest request = new GetChapterRequest();
+//			if (isOpenBook) {
+//				isOpenBook = false;
+//				processOpenWithIndex();
+//			} else {
+//				chapId = id;
+//			}
+//			request.chapterId = chapId;
+//			request.language = "vi";
+//			new IGetChapterRequest(new IChapterPostCallBack() {
+//
+//				@Override
+//				public void onResultChapterPostPost(GetChapterResponse statusObj) {
+//					// TODO Auto-generated method stub
+//
+//					processChapContent(statusObj.chapter.content);
+//					
+//					processOpenWithIndex();
+//					hideLoading();
+//				}
+//
+//				@Override
+//				public void fail() {
+//					// TODO Auto-generated method stub
+//
+//				}
+//			}, request).execute();
+//		}
 	}
 	
 	private void processOpenWithIndex(){

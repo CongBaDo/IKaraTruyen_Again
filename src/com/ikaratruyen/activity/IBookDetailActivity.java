@@ -67,6 +67,7 @@ import com.ikaratruyen.utils.IKaraDbHelper;
 import com.ikaratruyen.utils.ISettings;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yamin.reader.activity.CoreReadActivity;
+import com.ikaratruyen.IApplication;
 import com.ikaratruyen.R;
 
 /**
@@ -273,7 +274,7 @@ public class IBookDetailActivity extends Activity implements
 				
 				if(begin){
 					itemBook.shortDescription = statusObj.book.shortDescription;
-					barDownload.setVisibility(View.GONE);
+					//barDownload.setVisibility(View.GONE);
 					((TextView)findViewById(R.id.tv_read_count)).setText(statusObj.book.chapters.size()+"");
 					((TextView) findViewById(R.id.tv_description)).setText(statusObj.book.shortDescription);
 					((TextView) findViewById(R.id.tv_description)).setBackgroundColor(Color.WHITE);
@@ -285,11 +286,22 @@ public class IBookDetailActivity extends Activity implements
 					
 					for(int i = 0; i < chapList.size(); i++){
 						chapList.get(i).check = false;
+						chapList.get(i).index = i;
 					}
+					
 					adapter = new ChapAdapter(getApplicationContext(), chapList);
 					listView.setAdapter(adapter);
 					
 					ISettings.getInstance().setChapListContents(chapList);
+					
+					ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
+					
+					float percent = (float)downloadedRows.size()*100/chapList.size();
+					if(percent == 100){
+						butRead.setText(getResources().getString(R.string.title_read));
+					}
+					
+					barDownload.setProgress((int)percent);
 				}
 			}
 
@@ -415,14 +427,6 @@ public class IBookDetailActivity extends Activity implements
 			long id) {
 		// TODO Auto-generated method stub
 		
-//		Intent intent = new Intent(getApplicationContext(), INewReaderActivity.class);
-//		intent.putExtra("book_title", itemBook.title);
-//		intent.putExtra("chap_id", chapList.get(position)._id);
-//		intent.putExtra("chap_title", chapList.get(position).title);
-//		intent.putExtra("book_id", itemBook._id);
-//		intent.putExtra("chap_index", position);
-//		startActivity(intent);
-		
 		Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 		intent.putExtra("book_title", itemBook.title);
 		intent.putExtra("chap_id", chapList.get(position)._id);
@@ -433,6 +437,15 @@ public class IBookDetailActivity extends Activity implements
 		
 		IKaraDbHelper.getInstance(getApplicationContext()).addToJustRead(itemBook);
 	}
+	
+	@Override
+	public void onBackPressed(){
+		super.onBackPressed();
+		
+		//Log.v(TAG, "stopNewService");
+		Intent intent = new Intent(getApplicationContext(), DownloadService.class);
+		stopService(intent);
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -440,6 +453,10 @@ public class IBookDetailActivity extends Activity implements
 		switch (v.getId()) {
 		case R.id.img_back:
 			finish();
+			
+				//Log.v(TAG, "stopNewService");
+			Intent serviceInten = new Intent(getApplicationContext(), DownloadService.class);
+			stopService(serviceInten);
 			break;
 			
 		case R.id.view_rate:
@@ -487,8 +504,9 @@ public class IBookDetailActivity extends Activity implements
 			
 		case R.id.but_read:
 			
-			if(IKaraDbHelper.getInstance(IBookDetailActivity.this).getBookSize(itemBook._id) == chapList.size()){
-				Intent intent = new Intent(getApplicationContext(), INewReaderActivity.class);
+			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
+			if(downloadedRows.size() == chapList.size()){
+				Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 				intent.putExtra("book_title", itemBook.title);
 				intent.putExtra("chap_id", chapList.get(0)._id);
 				intent.putExtra("chap_title", chapList.get(0).title);
@@ -507,7 +525,7 @@ public class IBookDetailActivity extends Activity implements
 		            @Override
 		            public void onClick(DialogInterface dialog, int item) {
 		                if (item == 0){
-		                	Intent intent = new Intent(getApplicationContext(), INewReaderActivity.class);
+		                	Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 		    				intent.putExtra("book_title", itemBook.title);
 		    				intent.putExtra("chap_id", chapList.get(0)._id);
 		    				intent.putExtra("chap_title", chapList.get(0).title);
@@ -517,9 +535,10 @@ public class IBookDetailActivity extends Activity implements
 		    				startActivity(intent);
 		    				IKaraDbHelper.getInstance(getApplicationContext()).addToJustRead(itemBook);
 		                }else if (item == 1){
-		                	barDownload.setVisibility(View.VISIBLE);
+//		                	barDownload.setVisibility(View.VISIBLE);
 		                	intent = new Intent(IBookDetailActivity.this, DownloadService.class);
 		                	intent.putExtra("book_id", itemBook._id);
+		                	intent.putExtra("book_title", itemBook.title);
 		            		intent.putExtra("receiver", resultReceiver);
 		            		startService(intent);
 		                } 

@@ -154,7 +154,7 @@ public class Server {
 				i++;
 				Log.d(TAG, "index "+i);
 				callback.onProgress(i);
-				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTableFollowId(recording.bookId, line);
+//				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTableFollowId(recording.bookId, line);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
