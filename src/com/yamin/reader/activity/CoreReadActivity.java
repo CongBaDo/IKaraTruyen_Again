@@ -145,19 +145,19 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 			return;
 		}
 		if (myBook == null) {
-			
 			String path ;//= Environment.getExternalStorageDirectory().getAbsolutePath() +"/nemodotest.fb2";
 			
 			if(isOpenBook){
 				String saveInfo = IKaraDbHelper.getInstance(getApplicationContext()).getSavedInfo(bookId);
-				chapId = saveInfo.split(";")[0];
-				currentIndexOfChap = Integer.parseInt(saveInfo.split(";")[1]);
-				currentChapIndex = Integer.parseInt(saveInfo.split(";")[2]);
-				
-//				currentChapIndex = KaraUtils.ge
+//				Log.e(TAG, "isOpenBook "+saveInfo);
+				if(!saveInfo.equals("")){
+					chapId = saveInfo.split(";")[0];
+					currentIndexOfChap = Integer.parseInt(saveInfo.split(";")[1]);
+					currentChapIndex = Integer.parseInt(saveInfo.split(";")[2]);
+				}
 				
 				path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
-				Log.e(TAG, "oncreate save Info "+chapId+" "+currentChapIndex);
+				Log.v(TAG, "oncreate save Info "+chapId+" "+currentChapIndex+" "+currentIndexOfChap);
 				this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
 			}else{
 				path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
@@ -169,7 +169,10 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				}
 			}
 		}
+		
+		Log.i(TAG, "openBook "+currentIndexOfChap);
 		myFBReaderApp.openBook(myBook, null, action);
+		
 	}
 	
 	public Book createBookForFile(ZLFile file) {
@@ -385,6 +388,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				}.start();
 
 				myFBReaderApp.getViewWidget().repaint();
+				gotoPage(currentIndexOfChap);
 			}
 		});
 	}

@@ -97,7 +97,7 @@ public class KaraUtils {
 	}
 	
 	private static String convert2Html(String chapTitle, String bookName, String originalText){
-		Log.d(TAG, "convert2Html "+bookName);
+		//Log.d(TAG, "convert2Html "+bookName);
 		
 		String results = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 		results = results + "<body>";

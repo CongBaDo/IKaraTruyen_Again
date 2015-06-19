@@ -108,7 +108,7 @@ public class IDownloader {
 //				Log.w(TAG, "onResultChapterPostPost "+chapIndex+" "+statusObj.chapter._id);
 				callback.onProgress(chapIndex);
 				
-				KaraUtils.saveChapContent2SDCard(itemBook.title, itemBook._id, chapTitle, chapIndex, statusObj.chapter.content);
+				KaraUtils.saveChapContent2SDCard(itemBook.title, itemBook._id, chapTitle, chapIndex+1, statusObj.chapter.content);
 				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTable(bookID, statusObj.chapter);
 				download();
 			}

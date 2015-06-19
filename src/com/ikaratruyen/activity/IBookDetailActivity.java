@@ -125,7 +125,7 @@ public class IBookDetailActivity extends Activity implements
 		}
 		public void run() {
 			float percent = (float)progress*100/chapList.size();
-			if(percent == 100){
+			if(progress == chapList.size()){
 				stopService(intent);
 				butRead.setText(getResources().getString(R.string.title_read));
 			}
@@ -505,6 +505,7 @@ public class IBookDetailActivity extends Activity implements
 		case R.id.but_read:
 			
 			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
+			Log.e(TAG, "Reader size "+downloadedRows.size()+" "+chapList.size());
 			if(downloadedRows.size() == chapList.size()){
 				Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 				intent.putExtra("book_title", itemBook.title);

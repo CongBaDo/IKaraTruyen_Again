@@ -110,7 +110,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
     	Log.e(TAG, "onDestroy");
-//    	downloader.stop();
+    	downloader.stop();
     }
 }
 
