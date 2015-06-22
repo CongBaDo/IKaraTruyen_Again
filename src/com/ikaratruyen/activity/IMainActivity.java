@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
@@ -126,6 +127,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 	private InterstitialAd interstitial;
 	private String hotAppParams;
 	private ProgressDialog dialogLoading;
+	private RelativeLayout searchLayout;
 	private ArrayList<SearchItem> searchDatas;
 
 	@SuppressLint("NewApi") @Override
@@ -209,6 +211,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 		((TextView)header.findViewById(R.id.tv_Title)).setText(getResources().getString(R.string.app_name));
 		((ImageView)header.findViewById(R.id.img_Indicator)).setBackgroundResource(R.drawable.icon_book_open);
 		
+		searchLayout = (RelativeLayout)findViewById(R.id.search_layout);
 		searchView = (EditText)findViewById(R.id.search_view);
 		searchView.addTextChangedListener(this);
 		searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
@@ -273,13 +276,10 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 				idTitleMenu = id;
 				
 				prepareSampleData();
-				
+				searchLayout.setVisibility(View.VISIBLE);
 				if(id != null){
 					
 					getActionBar().setTitle(id);
-					
-					
-					
 					if(id.equals(getResources().getString(R.string.title_trogiup))){
 						Log.i(TAG, "Help");
 						if(!fragment.isAdded()){
@@ -362,8 +362,8 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 							public void onOtherAppPostPost(GetOtherAppsResponse statusObj) {
 								// TODO Auto-generated method stub
 								Log.e(TAG, "Check Check "+statusObj.apps.size());
-								
-								
+								hideLoading();
+								searchLayout.setVisibility(View.GONE);
 								UngDungHayAdapter adapter = new UngDungHayAdapter(IMainActivity.this, statusObj.apps);
 								listView.setAdapter(adapter);
 							}

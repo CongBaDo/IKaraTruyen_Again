@@ -102,6 +102,7 @@ public class IBookDetailActivity extends Activity implements
 	private Button butRead;
 	private ProgressDialog dialogLoading;
 	 private ShareDialog shareDialog;
+	 private boolean isDownloading = false;
 	 
 	 private MyResultReceiver resultReceiver;
 	private Intent intent;
@@ -439,13 +440,17 @@ public class IBookDetailActivity extends Activity implements
 		IKaraDbHelper.getInstance(getApplicationContext()).addToJustRead(itemBook);
 	}
 	
+	private void stopCurrectService(){
+		Intent intent = new Intent(getApplicationContext(), DownloadService.class);
+		stopService(intent);
+	}
+	
 	@Override
 	public void onBackPressed(){
 		super.onBackPressed();
 		
 		//Log.v(TAG, "stopNewService");
-		Intent intent = new Intent(getApplicationContext(), DownloadService.class);
-		stopService(intent);
+		
 	}
 
 	@Override
@@ -454,10 +459,6 @@ public class IBookDetailActivity extends Activity implements
 		switch (v.getId()) {
 		case R.id.img_back:
 			finish();
-			
-				//Log.v(TAG, "stopNewService");
-			Intent serviceInten = new Intent(getApplicationContext(), DownloadService.class);
-			stopService(serviceInten);
 			break;
 			
 		case R.id.view_rate:
@@ -507,7 +508,7 @@ public class IBookDetailActivity extends Activity implements
 			
 			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
 			Log.e(TAG, "Reader size "+downloadedRows.size()+" "+chapList.size());
-			if(downloadedRows.size() == chapList.size()){
+			if(downloadedRows.size() > 0 && isDownloading){
 				Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 				intent.putExtra("book_title", itemBook.title);
 				intent.putExtra("chap_id", chapList.get(0)._id);
@@ -517,6 +518,7 @@ public class IBookDetailActivity extends Activity implements
 				intent.putExtra("open_book", true);
 				startActivity(intent);
 				IKaraDbHelper.getInstance(getApplicationContext()).addToJustRead(itemBook);
+				
 			}else{
 				
 				CharSequence[] options = new CharSequence[]{ getResources().getString(R.string.title_read_online), "Download" };
@@ -538,11 +540,16 @@ public class IBookDetailActivity extends Activity implements
 		    				IKaraDbHelper.getInstance(getApplicationContext()).addToJustRead(itemBook);
 		                }else if (item == 1){
 //		                	barDownload.setVisibility(View.VISIBLE);
+		                	
+		                	stopCurrectService();
+		                	
 		                	intent = new Intent(IBookDetailActivity.this, DownloadService.class);
 		                	intent.putExtra("book_id", itemBook._id);
 		                	intent.putExtra("book_title", itemBook.title);
 		            		intent.putExtra("receiver", resultReceiver);
 		            		startService(intent);
+		            		
+		            		isDownloading = true;
 		                } 
 		            }
 		        });
