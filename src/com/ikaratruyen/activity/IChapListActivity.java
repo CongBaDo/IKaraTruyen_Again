@@ -109,13 +109,17 @@ public class IChapListActivity extends Activity implements
 				// TODO Auto-generated method stub
 				Log.v(TAG, "AFTER "+s.toString());
 				if(s.toString().length() > 0 && s.toString().length() < 6){
-					int current = Integer.parseInt(s.toString());
-					if(current >= chapList.size()){
-						listView.setSelection(chapList.size());
-					}else if(current == 0){
-						listView.setSelection(current);
-					}else{
-						listView.setSelection(current - 1);
+					try{
+						int current = Integer.parseInt(s.toString());
+						if(current >= chapList.size()){
+							listView.setSelection(chapList.size());
+						}else if(current == 0){
+							listView.setSelection(current);
+						}else{
+							listView.setSelection(current - 1);
+						}
+					}catch(Exception e){
+						
 					}
 				}else{
 					listView.setSelection(0);

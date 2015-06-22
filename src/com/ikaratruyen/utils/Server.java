@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -63,6 +64,10 @@ import com.ikaratruyen.model.StoreGcmIdResponse;
 import com.ikaratruyen.model.TopBooksRequest;
 import com.ikaratruyen.model.TopBooksResponse;
 import com.ikaratruyen.request.IGetBooksContentRequest.IBookContentCallBack;
+import com.squareup.okhttp.CacheControl;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class Server {
 	private static final String TAG = "Server";
@@ -82,6 +87,8 @@ public class Server {
 	public final static String STOREGCM	= "/test.StoreGcmId";
 	public final static String SEARCH_BOOK = "/test.SearchBooks";
 	public final static String GET_BOOK_CONTENT = "/test.GetBookContent";
+	
+	private static final int TIMEOUT = 15000;
 //	public static String GETCHAPTER = mainServer + GETCHAPTER;
 	
 //	public static GetBookContentResponse getBookContent(GetBookContentRequest recording) {
@@ -383,7 +390,7 @@ public class Server {
 			//Log.i(GETGENRES, "responseCode "+responseCode +" "+content);
 //			Log.v(GETGENRES, "content "+content);
 			
-			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "GetBookResponse.txt");
+//			writeFileOnSDCard(content, IApplication.getInstance().getApplicationContext(), "GetBookResponse.txt");
 			return KaraUtils.deserialize(GetBookResponse.class, content);
 			
 		} catch (Exception ex) {
@@ -391,6 +398,32 @@ public class Server {
 		}
 		
 		return null;
+	}
+	
+	public static GetBookResponse getBookNewResponse(GetBookRequest recording){
+		 try {
+			 
+			 OkHttpClient  httpClient = new OkHttpClient();
+            httpClient.setConnectTimeout(TIMEOUT, TimeUnit.SECONDS);
+            httpClient.setReadTimeout(TIMEOUT, TimeUnit.SECONDS);
+            httpClient.setConnectTimeout(60, TimeUnit.SECONDS); // connect timeout
+            httpClient.setReadTimeout(60, TimeUnit.SECONDS);    // socket timeout
+             Request request = new Request.Builder()
+                     .cacheControl(new CacheControl.Builder().noCache().build())
+                     .url(mainServer + GETBOOK)
+                     .build();
+             Response response = httpClient.newCall(request).execute();
+
+//             Log.e(TAG, "reponse Code " + response.code());
+
+             String jsonData = response.body().string();
+             
+             Log.e(TAG, "getBookNewResponse reponse Code " + response.code()+" "+jsonData);
+             return KaraUtils.deserialize(GetBookResponse.class, jsonData);
+         } catch (IOException ioe) {
+             Log.e(TAG, "IOException occurs while downloading asset image", ioe);
+             return null;
+         }
 	}
 	
 	public static NewBooksResponse getNewBooksResponse(NewBooksRequest recording) {

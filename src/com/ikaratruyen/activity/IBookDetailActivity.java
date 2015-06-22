@@ -128,9 +128,10 @@ public class IBookDetailActivity extends Activity implements
 			if(progress == chapList.size()){
 				stopService(intent);
 				butRead.setText(getResources().getString(R.string.title_read));
+				barDownload.setProgress(100);
+			}else{
+				barDownload.setProgress((int)percent);
 			}
-			
-			barDownload.setProgress((int)percent);
 		}
 	}
 	 

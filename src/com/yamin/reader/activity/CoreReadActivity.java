@@ -39,6 +39,7 @@ import android.os.Message;
 import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,6 +98,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	private ImageView imgFontText;
 	private int currentIndexOfChap = 0;
 	private int readerState = IkaraConstant.READER_STATE.NIGHT;
+	private boolean isLoadingChapter = false;
+	
 	private Handler mHandler = new Handler() {
 
 		@Override
@@ -172,7 +175,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		
 		Log.i(TAG, "openBook "+currentIndexOfChap);
 		myFBReaderApp.openBook(myBook, null, action);
-		
 	}
 	
 	public Book createBookForFile(ZLFile file) {
@@ -201,6 +203,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.core_main);
 		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		getZLibrary().setActivity(CoreReadActivity.this);
 		
 		currentChapIndex = getIntent().getExtras().getInt("chap_index");
@@ -209,7 +212,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		isOpenBook = getIntent().getExtras().getBoolean("open_book");
 		bookTitle = getIntent().getExtras().getString("book_title");
 		chapId = getIntent().getExtras().getString("chap_id");
-		
 		
 		Log.v(TAG, "oncreate "+chapTitle +" chapTitle "+chapTitle+" CHAPID "+chapId+" BOOKTITLE "+bookTitle);
 
@@ -348,31 +350,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		});
 	}
 
-//	@Override
-//	protected void onNewIntent(final Intent intent) {
-//		Log.i("TAG", "onNewIntent()");
-//		final String action = intent.getAction();
-//		final Uri data = intent.getData();
-//
-//		if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0) {
-//			super.onNewIntent(intent);
-//		} else if (Intent.ACTION_VIEW.equals(action) && data != null
-//				&& "fbreader-action".equals(data.getScheme())) {
-//			myFBReaderApp.runAction(data.getEncodedSchemeSpecificPart(),
-//					data.getFragment());
-//		} else if (ACTION_OPEN_BOOK.equals(action)) {
-//
-//			getCollection().bindToService(this, new Runnable() {
-//				public void run() {
-//					Log.i("TAG", "openBook()");
-//					//openBook(intent, null, true);
-//				}
-//			});
-//		} else {
-//			super.onNewIntent(intent);
-//		}
-//	}
-
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -464,9 +441,9 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	public void backPress() {
 		int y = myFBReaderApp.getTextView().pagePosition().Current;
 		int z = myFBReaderApp.getTextView().pagePosition().Total;
-		Log.i("MAIN", y + "" + "/" + z + ToolUtils.myPercent(y, z));
+		Log.i(TAG, "backPress "+y + "" + "/" + z + ToolUtils.myPercent(y, z));
 
-		Log.i("MAIN", "" + myFBReaderApp.getTextView().getEndCursor() +" "+myBook.getId());
+		Log.i(TAG, "backPress"+myBook.getId());
 		myFBReaderApp.Collection.storePosition(myBook.getId(), myFBReaderApp
 				.getTextView().getEndCursor());
 		finish();
@@ -559,17 +536,20 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		super.onConfigurationChanged(newConfig);
 	}
 	
-//	@Override
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-//			//
-//			backPress();
-//			this.onBackPressed();
-//			return true;
-//		}
-//		return (myMainView != null && myMainView.onKeyDown(keyCode, event))
-//				|| super.onKeyDown(keyCode, event);
-//	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+			//
+			saveIndexPage();
+			backPress();
+			this.onBackPressed();
+			return true;
+		}
+		return (myMainView != null && myMainView.onKeyDown(keyCode, event))
+				|| super.onKeyDown(keyCode, event);
+	}
+	
+	
 	private PowerManager.WakeLock myWakeLock;
 	private boolean myWakeLockToCreate;
 
@@ -644,6 +624,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				+ " " + (currentChapIndex + 1));
 		
 		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
+		
+		gotoPage(currentIndexOfChap);
 	}
 	
 	private String makeProgressText(int page, int pagesNumber) {
@@ -661,18 +643,46 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	
 	public void loadNextChap(boolean isNext, boolean isBack){
 		
-		Log.v(TAG, "loadNextChap "+isNext +" "+isBack);
+		Log.v(TAG, "loadNextChap "+isNext +" "+isBack+" "+isLoadingChapter);
+		
 		if(!isBack){
 			if(currentChapIndex > 0){
-   			 	currentChapIndex--;
-   			 	loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
-   		 	}
+				currentChapIndex--;
+				String path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+				
+				if(!isLoadingChapter){
+					isLoadingChapter = true;
+					if(path == null){
+						loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+					}else{
+						this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+						isLoadingChapter = false;
+						
+						myFBReaderApp.openBook(myBook, null, null);
+					}
+				}
+				
+			}
 		}
 		
 		if(!isNext){
 			currentChapIndex++;
+			
 			if(currentChapIndex < ISettings.getInstance().getChapListContents().size()){
-				loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+				String path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+				
+				if(!isLoadingChapter){
+					isLoadingChapter = true;
+					if(path == null){
+						loadChapContent(ISettings.getInstance().getChapListContents().get(currentChapIndex)._id);
+					}else{
+						Log.v(TAG, "loadNextChap path "+path);
+						this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+						isLoadingChapter = false;
+						
+						myFBReaderApp.openBook(myBook, null, null);
+					}
+				}
 			}
 		}
 	}
@@ -790,8 +800,12 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 					Log.v(TAG, "onResuktChapterPost "+chapTitle+" "+bookTitle);
 					KaraUtils.saveChapContent2SDCard(bookTitle, bookId, chapTitle, currentChapIndex+1, statusObj.chapter.content);
 					String path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
+					tvChapIndexTop.setText(""+(currentChapIndex+1));
+					
 					myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
 					myFBReaderApp.openBook(myBook, null, null);
+					
+					isLoadingChapter = false;
 				}
 				
 				@Override

@@ -220,6 +220,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 					KeyEvent event) {
 				// TODO Auto-generated method stub
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					Log.v(TAG, "Search now ");
 					searchBook();
 		            return true; 
 		        }
@@ -704,23 +705,28 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 			@Override
 			public void onResultSearchPostPost(JSONArray statusObj) {
 				// TODO Auto-generated method stub
-				Log.i(TAG, "respoonse search "+statusObj.length());
 				
-				searchDatas = new ArrayList<SearchItem>();
-				for(int i = 0; i < statusObj.length(); i++){
-					SearchItem item = new SearchItem();
+				try{
+					Log.i(TAG, "respoonse search "+statusObj.length());
 					
-					try {
-						item.title = statusObj.getString(i).trim();
-						searchDatas.add(item);
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					searchDatas = new ArrayList<SearchItem>();
+					for(int i = 0; i < statusObj.length(); i++){
+						SearchItem item = new SearchItem();
+						
+						try {
+							item.title = statusObj.getString(i).trim();
+							searchDatas.add(item);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
+					
+					SearchAdapter adapter = new SearchAdapter(getApplicationContext(), searchDatas);
+					listView.setAdapter(adapter);
+				}catch(Exception e){
+					
 				}
-				
-				SearchAdapter adapter = new SearchAdapter(getApplicationContext(), searchDatas);
-				listView.setAdapter(adapter);
 			}
 		}, query).execute();
 	}
@@ -745,21 +751,25 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
 		isFinishSearch = false;
-		if (s.toString().length() > 0) {
-			query = s.toString();
-			startSearch = false;
+		
+		try{
+			if (s.toString().length() > 0) {
+				query = s.toString();
+				startSearch = false;
 				if (System.currentTimeMillis() - time <= 300) {
 					startSearch = true;
 				}
 				time = System.currentTimeMillis();
 				Log.i(TAG, "onQueryTextChange " + start);
-	
-			if (startSearch) {
-				handler.removeCallbacks(runable);
+				
+				if (startSearch) {
+					handler.removeCallbacks(runable);
+				}
+				
+				handler.postDelayed(runable, 300);
 			}
 			
-			handler.postDelayed(runable, 300);
-		}
+		}catch(Exception e){}
 	}
 
 	@Override
