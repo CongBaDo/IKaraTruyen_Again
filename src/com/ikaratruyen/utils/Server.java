@@ -533,33 +533,62 @@ public class Server {
 	
 	public static String suggestsearch(String query) {
     	//Log.i(TAG, "trackImpression "+trigger);
-        try {
+		
+		try {
 			
-            String server = mainServer+SUGGESTION_SEARCH +  
+			String server = mainServer+SUGGESTION_SEARCH +  
             		"?query=" + URLEncoder.encode(query, "utf-8") + 
             		"&size=" + 10;
-            
-            DefaultHttpClient httpclient = new DefaultHttpClient();
-            BasicHttpContext mHttpContext = new BasicHttpContext();
+
+			OkHttpClient httpClient = new OkHttpClient();
+			httpClient.setConnectTimeout(TIMEOUT, TimeUnit.SECONDS);
+			httpClient.setReadTimeout(TIMEOUT, TimeUnit.SECONDS);
+			httpClient.setConnectTimeout(60, TimeUnit.SECONDS); // connect
+																// timeout
+			httpClient.setReadTimeout(60, TimeUnit.SECONDS); // socket timeout
+			Request request = new Request.Builder()
+					.cacheControl(new CacheControl.Builder().noCache().build())
+					.url(server).build();
+			Response response = httpClient.newCall(request).execute();
+
+			// Log.e(TAG, "reponse Code " + response.code());
+
+			String jsonData = response.body().string();
+
+			Log.w(TAG, "suggestsearch reponse Code " + response.code()
+					+ " " + jsonData);
 			
-			HttpPost httppost = new HttpPost(server);
-			HttpResponse response = httpclient.execute(httppost, mHttpContext);
-			int responseCode = response.getStatusLine().getStatusCode();
-			//Log.e(TAG, "responde CODE " + responseCode+" "+server);
-            
-			if (responseCode == HttpStatus.SC_OK) {
-				Log.e(TAG, "200 "+server);
-				HttpEntity httpEntity = response.getEntity();
-				String respondString  = new String(EntityUtils.toString(httpEntity));
-				Log.v(TAG, "jSOn " +respondString.toString());
-				
-				return respondString;
-			}
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-        
-        return null;
+			return jsonData;
+//			return KaraUtils.deserialize(GetBookResponse.class, jsonData);
+		} catch (IOException ioe) {
+			Log.e(TAG, "IOException occurs while downloading asset image", ioe);
+			return null;
+		}
+//        try {
+//			
+//            String server = mainServer+SUGGESTION_SEARCH +  
+//            		"?query=" + URLEncoder.encode(query, "utf-8") + 
+//            		"&size=" + 10;
+//            
+//            DefaultHttpClient httpclient = new DefaultHttpClient();
+//            BasicHttpContext mHttpContext = new BasicHttpContext();
+//			
+//			HttpPost httppost = new HttpPost(server);
+//			HttpResponse response = httpclient.execute(httppost, mHttpContext);
+//			int responseCode = response.getStatusLine().getStatusCode();
+//			//Log.e(TAG, "responde CODE " + responseCode+" "+server);
+//            
+//			if (responseCode == HttpStatus.SC_OK) {
+//				Log.e(TAG, "200 "+server);
+//				HttpEntity httpEntity = response.getEntity();
+//				String respondString  = new String(EntityUtils.toString(httpEntity));
+//				Log.v(TAG, "jSOn " +respondString.toString());
+//				
+//				return respondString;
+//			}
+//        } catch (Exception e) {
+//        	e.printStackTrace();
+//        }
     }
 	
 	public static String compress(String str) throws Exception {

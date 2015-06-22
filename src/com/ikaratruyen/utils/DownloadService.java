@@ -26,7 +26,7 @@ public class DownloadService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
 		resultReceiver = intent.getParcelableExtra("receiver");
-		Log.e(TAG, "onStartCommand");
+//		Log.e(TAG, "onStartCommand");
 		bookId = intent.getExtras().getString("book_id");
 		String bookTitle = intent.getExtras().getString("book_title");
 		GetBookContentRequest request = new GetBookContentRequest();
