@@ -99,6 +99,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	private int currentIndexOfChap = 0;
 	private int readerState = IkaraConstant.READER_STATE.NIGHT;
 	private boolean isLoadingChapter = false;
+	private boolean isNext, isBack;
 	
 	private Handler mHandler = new Handler() {
 
@@ -162,6 +163,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
 				Log.v(TAG, "oncreate save Info "+chapId+" "+currentChapIndex+" "+currentIndexOfChap);
 				this.myBook = myFBReaderApp.Collection.getBookByFile(BookUtil.getBookFileFromSDCard(path));
+				tvChapIndexTop.setText((currentChapIndex+1)+"");
 			}else{
 				path = KaraUtils.getChapPathFromSdcard(bookId, currentChapIndex+1);
 				Log.i(TAG, "openBook "+path);
@@ -501,6 +503,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 					R.anim.layout_enter));
 			bottomLL.startAnimation(AnimationUtils.loadAnimation(this,
 					R.anim.layout_enter));
+			
+//			seekPage.setProgress(myFBReaderApp.getTextView().pagePosition().Current);
 		} else {
 			isBottomAndTopMenuShow = false;
 			topLL.setVisibility(View.GONE);
@@ -624,8 +628,16 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 				+ " " + (currentChapIndex + 1));
 		
 		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
+//		if(isOpenBook)
+//		gotoPage(currentIndexOfChap);
 		
-		gotoPage(currentIndexOfChap);
+		if(!isBack){
+			gotoPage(myFBReaderApp.getTextView().pagePosition().Total);
+		}else if(!isNext){
+			gotoPage(0);
+		}else{
+			gotoPage(currentIndexOfChap);
+		}
 	}
 	
 	private String makeProgressText(int page, int pagesNumber) {
@@ -644,7 +656,8 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	public void loadNextChap(boolean isNext, boolean isBack){
 		
 		Log.v(TAG, "loadNextChap "+isNext +" "+isBack+" "+isLoadingChapter);
-		
+		this.isNext = isNext;
+		this.isBack = isBack;
 		if(!isBack){
 			if(currentChapIndex > 0){
 				currentChapIndex--;
@@ -661,7 +674,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 						myFBReaderApp.openBook(myBook, null, null);
 					}
 				}
-				
 			}
 		}
 		

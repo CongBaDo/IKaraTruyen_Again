@@ -139,7 +139,11 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 		int adSize = AdSize.BANNER.getHeight();
 		int bottomHeight = KaraUtils.dpToPx(this, 48);
 		Log.e(TAG, "onCreate "+adSize+" "+bottomHeight);
-		showLoading();
+		
+		if(KaraUtils.hasNetworkConnection(getApplicationContext())){
+			showLoading();
+		}
+		
 		
 		ISettings.getInstance().config(IMainActivity.this);
 		
@@ -277,6 +281,8 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 				
 				prepareSampleData();
 				searchLayout.setVisibility(View.VISIBLE);
+				
+				
 				if(id != null){
 					
 					getActionBar().setTitle(id);
@@ -316,6 +322,11 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 						adapter.addMore(bookList, 20);
 						adapter.notifyDataSetChanged();
 					}else if(id.equals(getResources().getString(R.string.title_sach_moi))){
+						
+						if(!KaraUtils.hasNetworkConnection(getApplicationContext())){
+							toggle();
+							return;
+						}
 						NewBooksRequest request = new NewBooksRequest();
 						request.cursor = currentCursor;
 						request.language = "vi";
@@ -350,6 +361,12 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 					} else if(id.equals(getResources().getString(R.string.title_thoat))){
 						finish();
 					} else if(id.equals(getResources().getString(R.string.title_ungdunghay))){
+						
+						if(!KaraUtils.hasNetworkConnection(getApplicationContext())){
+							toggle();
+							return;
+						}
+						
 						GetOtherAppsRequest request = new GetOtherAppsRequest();
 						request.language = "vi";
 						request.platform = "ANDROID";
@@ -377,6 +394,12 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 					}
 					
 					else{
+						
+						if(!KaraUtils.hasNetworkConnection(getApplicationContext())){
+							toggle();
+							return;
+						}
+						
 						savedTitle = id;
 						getSupportFragmentManager().beginTransaction().remove(fragment).commit();
 						TopBooksRequest request = new TopBooksRequest();
@@ -391,29 +414,37 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 			}
 		});
         leftMenuListView.setAdapter(leftMenuAdapter);
-        new IGenresPostRequest(new IGenresPostCallBack() {
-			
-			@Override
-			public void onResultIGenresPostPost(GetGenresResponse statusObj) {
-				// TODO Auto-generated method stub
-		        listGenres = statusObj.genres;
-		        idTitleMenu = listGenres.get(0)._id; 
-				leftMenuAdapter.updateTheloai(listGenres);
-			}
-			
-			@Override
-			public void fail() {
-				// TODO Auto-generated method stub
-				
-			}
-		}).execute();
+        
+//        leftMenuAdapter.updateTheloai(listGenres);
+        
+        if(KaraUtils.hasNetworkConnection(getApplicationContext())){
+        	new IGenresPostRequest(new IGenresPostCallBack() {
+        		
+        		@Override
+        		public void onResultIGenresPostPost(GetGenresResponse statusObj) {
+        			// TODO Auto-generated method stub
+        			listGenres = statusObj.genres;
+        			idTitleMenu = listGenres.get(0)._id; 
+        			leftMenuAdapter.updateTheloai(listGenres);
+        		}
+        		
+        		@Override
+        		public void fail() {
+        			// TODO Auto-generated method stub
+        			
+        		}
+        	}).execute();
+        }
         
         
+        
+        //START LOAD DATA
         TopBooksRequest request = new TopBooksRequest();
         request.language = "vi";
         request.cursor = currentCursor;
         request.genreId = getResources().getString(R.string.title_tien_hiep);
         new TopBookPostRequest(topBookCallBack, request).execute();
+        
         interstitial = new InterstitialAd(IMainActivity.this);
 		// Insert the Ad Unit ID
 		interstitial.setAdUnitId("ca-app-pub-8429996645546440/9944646214");

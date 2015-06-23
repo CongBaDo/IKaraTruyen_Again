@@ -65,6 +65,7 @@ import com.ikaratruyen.request.IRatingRequest.RateCallBack;
 import com.ikaratruyen.utils.DownloadService;
 import com.ikaratruyen.utils.IKaraDbHelper;
 import com.ikaratruyen.utils.ISettings;
+import com.ikaratruyen.utils.KaraUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yamin.reader.activity.CoreReadActivity;
 import com.ikaratruyen.IApplication;
@@ -260,6 +261,12 @@ public class IBookDetailActivity extends Activity implements
 	}
 	
 	private void getBookValue(final boolean begin){
+		
+		if(!KaraUtils.hasNetworkConnection(getApplicationContext())){
+			
+			return;
+		}
+		
 		
 		GetBookRequest request = new GetBookRequest();
 		request.bookId = itemBook._id;
@@ -508,7 +515,7 @@ public class IBookDetailActivity extends Activity implements
 			
 			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
 			Log.e(TAG, "Reader size "+downloadedRows.size()+" "+chapList.size());
-			if(downloadedRows.size() > 0 && isDownloading){
+			if((downloadedRows.size() > 0 && isDownloading) || downloadedRows.size() == chapList.size()){
 				Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 				intent.putExtra("book_title", itemBook.title);
 				intent.putExtra("chap_id", chapList.get(0)._id);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,48 +72,63 @@ public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener
 		item.name = context.getResources().getString(R.string.title_tien_hiep);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_kiem_hiep);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_ngon_tinh);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_teen);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_do_thi);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_quansu);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_lichsu);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_xuyenkhong);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_digioi);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_vongdu);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_truyenma);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_trinhtham);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_khoahuyen);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_huyenhuyen);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_dinang);
 		listGenres.add(item);
 		
+		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_tieuthuyet);
 		listGenres.add(item);
 		
@@ -169,6 +185,8 @@ public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener
 			obj.id = listGenres.get(i)._id;
 			obj.marketLink = listGenres.get(i).marketLink;
 			obj.type = 1;
+			
+			Log.e(Tag, "KINE "+listGenres.get(i).name);
 			data.add(obj);
 		}
 		
