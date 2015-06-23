@@ -99,7 +99,7 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	private int currentIndexOfChap = 0;
 	private int readerState = IkaraConstant.READER_STATE.NIGHT;
 	private boolean isLoadingChapter = false;
-	private boolean isNext, isBack;
+	private boolean isNext = true, isBack = true;
 	
 	private Handler mHandler = new Handler() {
 
@@ -623,13 +623,11 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 					+ " " + volume);
 		}
 		
-		Log.v(TAG, "TOATAL "+myFBReaderApp.getTextView().pagePosition().Total+" "+myFBReaderApp.getTextView().pagePosition().Current);
+		Log.v(TAG, "TOATAL "+myFBReaderApp.getTextView().pagePosition().Total+" "+myFBReaderApp.getTextView().pagePosition().Current+" current "+currentIndexOfChap);
 		tvChapIndex.setText(getResources().getString(R.string.chapter_value)
 				+ " " + (currentChapIndex + 1));
 		
 		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
-//		if(isOpenBook)
-//		gotoPage(currentIndexOfChap);
 		
 		if(!isBack){
 			gotoPage(myFBReaderApp.getTextView().pagePosition().Total);
@@ -638,19 +636,6 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 		}else{
 			gotoPage(currentIndexOfChap);
 		}
-	}
-	
-	private String makeProgressText(int page, int pagesNumber) {
-		final StringBuilder builder = new StringBuilder();
-		builder.append(page);
-		builder.append("/");
-		builder.append(pagesNumber);
-		final TOCTree tocElement = myFBReaderApp.getCurrentTOCElement();
-		if (tocElement != null) {
-			builder.append("  ");
-			builder.append(tocElement.getText());
-		}
-		return builder.toString();
 	}
 	
 	public void loadNextChap(boolean isNext, boolean isBack){
