@@ -14,7 +14,6 @@ import org.geometerplus.android.fbreader.libraryService.BookCollectionShadow;
 import org.geometerplus.fbreader.book.Book;
 import org.geometerplus.fbreader.book.BookUtil;
 import org.geometerplus.fbreader.bookmodel.BookModel;
-import org.geometerplus.fbreader.bookmodel.TOCTree;
 import org.geometerplus.fbreader.fbreader.ActionCode;
 import org.geometerplus.fbreader.fbreader.ChangeFontSizeAction;
 import org.geometerplus.fbreader.fbreader.ColorProfile;
@@ -30,6 +29,7 @@ import org.geometerplus.zlibrary.ui.android.library.ZLAndroidApplication;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 import org.geometerplus.zlibrary.ui.android.view.AndroidFontUtil;
 import org.geometerplus.zlibrary.ui.android.view.ZLAndroidWidget;
+
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -46,10 +46,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -496,14 +497,43 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 
 	public void navigate() {
 		if (!isBottomAndTopMenuShow) {
-			isBottomAndTopMenuShow = true;
 			topLL.setVisibility(View.VISIBLE);
 			bottomLL.setVisibility(View.VISIBLE);
-			topLL.startAnimation(AnimationUtils.loadAnimation(this,
-					R.anim.layout_enter));
-			bottomLL.startAnimation(AnimationUtils.loadAnimation(this,
-					R.anim.layout_enter));
+//			topLL.startAnimation(AnimationUtils.loadAnimation(this,
+//					R.anim.layout_enter));
+//			bottomLL.startAnimation(AnimationUtils.loadAnimation(this,
+//					R.anim.layout_enter));
 			
+			Animation show = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.layout_enter);
+			bottomLL.setAnimation(show);
+			topLL.setAnimation(show);
+			
+			seekPage.setProgress(myFBReaderApp.getTextView().pagePosition().Current-1);
+			tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current+"/"+myFBReaderApp.getTextView().pagePosition().Total);
+			
+			show.setAnimationListener(new AnimationListener() {
+				
+				@Override
+				public void onAnimationStart(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					// TODO Auto-generated method stub
+					
+					isBottomAndTopMenuShow = true;
+				}
+			});
+			
+//			seekPage.setProgress(myFBReaderApp.getTextView().pagePosition().Current-1);
 //			seekPage.setProgress(myFBReaderApp.getTextView().pagePosition().Current);
 		} else {
 			isBottomAndTopMenuShow = false;
@@ -607,6 +637,12 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		// TODO Auto-generated method stub
+		Log.e(TAG, "onProgressChanged "+progress);
+		
+		if(!isBottomAndTopMenuShow){
+			return;
+		}
+		
 		final int page = progress + 1;
 		gotoPage(page);
 		tvIndex.setText(myFBReaderApp.getTextView().pagePosition().Current + "/" + (myFBReaderApp.getTextView().pagePosition().Total));
@@ -640,7 +676,19 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	
 	public void loadNextChap(boolean isNext, boolean isBack){
 		
-		Log.v(TAG, "loadNextChap "+isNext +" "+isBack+" "+isLoadingChapter);
+		Log.v(TAG, "loadNextChap "+myFBReaderApp.getTextView().pagePosition().Current);
+		if(isBottomAndTopMenuShow){
+			isBottomAndTopMenuShow = false;
+			topLL.setVisibility(View.GONE);
+			bottomLL.setVisibility(View.GONE);
+			topLL.startAnimation(AnimationUtils.loadAnimation(this,
+					R.anim.layout_exit));
+			bottomLL.startAnimation(AnimationUtils.loadAnimation(this,
+					R.anim.layout_exit));
+		}
+		
+//		seekPage.setProgress(myFBReaderApp.getTextView().pagePosition().Current-1);
+		
 		this.isNext = isNext;
 		this.isBack = isBack;
 		if(!isBack){
