@@ -442,13 +442,12 @@ public class CoreReadActivity extends FragmentActivity implements OnSeekBarChang
 	}
 	
 	public void backPress() {
-		int y = myFBReaderApp.getTextView().pagePosition().Current;
-		int z = myFBReaderApp.getTextView().pagePosition().Total;
-		Log.i(TAG, "backPress "+y + "" + "/" + z + ToolUtils.myPercent(y, z));
-
-		Log.i(TAG, "backPress"+myBook.getId());
-		myFBReaderApp.Collection.storePosition(myBook.getId(), myFBReaderApp
-				.getTextView().getEndCursor());
+//		int y = myFBReaderApp.getTextView().pagePosition().Current;
+//		int z = myFBReaderApp.getTextView().pagePosition().Total;
+//		Log.i(TAG, "backPress "+y + "" + "/" + z + ToolUtils.myPercent(y, z));
+//
+//		myFBReaderApp.Collection.storePosition(myBook.getId(), myFBReaderApp
+//				.getTextView().getEndCursor());
 		finish();
 	}
 

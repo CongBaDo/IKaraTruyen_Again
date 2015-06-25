@@ -70,66 +70,98 @@ public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener
 		Genre item = new Genre(); 
 		
 		item.name = context.getResources().getString(R.string.title_tien_hiep);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/tien_hiep.jpg";
+		item._id = context.getResources().getString(R.string.title_tien_hiep);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_kiem_hiep);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/kiem_hiep.jpg";
+		item._id  = context.getResources().getString(R.string.title_kiem_hiep);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_ngon_tinh);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/ngon_tinh.jpg";
+		item._id =  context.getResources().getString(R.string.title_ngon_tinh);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_teen);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/truyen_teen.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_teen);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_do_thi);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/do_thi.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_do_thi);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_quansu);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/quan_su.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_quansu);
 		listGenres.add(item);
 		
 		item = new Genre();
+		item.name = context.getResources().getString(R.string.title_the_lichsu);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/lich_su.jpg";
 		item.name = context.getResources().getString(R.string.title_the_lichsu);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_xuyenkhong);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/xuyen_khong.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_xuyenkhong);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_digioi);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/di_gioi.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_digioi);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_vongdu);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/vong_du.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_vongdu);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_truyenma);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/truyen_ma.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_truyenma);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_trinhtham);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/trinh_tham.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_trinhtham);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_khoahuyen);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/khoa_huyen.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_khoahuyen);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_huyenhuyen);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/huyen_huyen.jpg";
+		item._id =  context.getResources().getString(R.string.title_the_huyenhuyen);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_dinang);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/di_nang.jpg";
+		item._id = context.getResources().getString(R.string.title_the_dinang);
 		listGenres.add(item);
 		
 		item = new Genre();
 		item.name = context.getResources().getString(R.string.title_the_tieuthuyet);
+		item._id = context.getResources().getString(R.string.title_the_tieuthuyet);
+		item.thumbnailImage = "http://truyen4m.appspot.com/images/genres/tieu_thuyet.jpg";
 		listGenres.add(item);
 		
 		return listGenres;
@@ -186,7 +218,7 @@ public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener
 			obj.marketLink = listGenres.get(i).marketLink;
 			obj.type = 1;
 			
-			Log.e(Tag, "KINE "+listGenres.get(i).name);
+//			Log.e(Tag, "KINE "+listGenres.get(i).name);
 			data.add(obj);
 		}
 		
@@ -314,6 +346,8 @@ public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener
 			if(data.get(position).draw != null){
 				holder2.imageView.setImageDrawable(data.get(position).draw);
 			}else{
+				
+				Log.v(Tag, "image "+data.get(position).thumbUrl+" "+data.get(position).id);
 				ImageLoader.getInstance().displayImage(data.get(position).thumbUrl, holder2.imageView);
 			}
 			

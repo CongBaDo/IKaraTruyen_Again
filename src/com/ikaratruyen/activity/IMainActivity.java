@@ -129,6 +129,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 	private ProgressDialog dialogLoading;
 	private RelativeLayout searchLayout;
 	private ArrayList<SearchItem> searchDatas;
+	private boolean isSachVuaDoc = false;
 
 	@SuppressLint("NewApi") @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -281,7 +282,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 				
 				prepareSampleData();
 				searchLayout.setVisibility(View.VISIBLE);
-				
+				isSachVuaDoc = false;
 				
 				if(id != null){
 					
@@ -336,7 +337,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 						if(bookList.get(0)._id == null){
 							bookList.clear();
 						}
-						
+						isSachVuaDoc = true;
 						bookList = IKaraDbHelper.getInstance(getApplicationContext()).getAllBookInJustRead();
 						
 						Collections.sort(bookList, new Comparator<Book>() {
@@ -555,6 +556,7 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 				intent.putExtra("book_status", bookList.get(position).status);
 				intent.putExtra("book_totalrate", bookList.get(position).totalRate);
 				intent.putExtra("book_ratecount", bookList.get(position).rateCounter);
+				intent.putExtra("sach_vua_doc", isSachVuaDoc);
 				startActivity(intent);
 //			}
 		}else{
