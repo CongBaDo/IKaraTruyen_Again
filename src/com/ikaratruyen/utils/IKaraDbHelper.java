@@ -30,6 +30,7 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 
 	private static final String FAVOR_TABLE 			= "favor_table";
 	private static final String TABLE_JUST_READ 		= "just_read_table";
+	private static final String TABLE_DOWNLOADEDBOOK 		= "downloaded_table";
 	private static final String TABLE_SAVED_INDEX		= "table_saved_index";
 	private static final String TABLE_VIEW_COUNTER		= "table_view_counter";
 	private static final String TABLE_RATING			= "table_rating";
@@ -89,6 +90,7 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 		createVC(db);
 		createRatingTable(db);
 		createSavedIndexTable(db);
+		createDownloadedBookTable(db);
 	}
 
 	@Override
@@ -199,10 +201,43 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 			return 0;
 	}
 	
-	public ArrayList<Chapter> getAllChapter(String bookId) {
+	public ArrayList<Chapter> getAllDownloaedChapter(String bookId) {
 		bookId = getBookId(bookId);
 		
 		Log.e(TAG, "getAllChapter "+PREFIX_TABLE+bookId);
+		
+		ArrayList<Chapter> items = new ArrayList<Chapter>();
+			try {
+				SQLiteDatabase db = this.getWritableDatabase();
+				Cursor cursor = db.query((PREFIX_TABLE+bookId), null, null, null, null, null, COL_ID);
+				if (cursor != null && cursor.moveToFirst()) {
+					do {
+						Chapter item = new Chapter();
+						item._id = cursor.getString(cursor.getColumnIndex(COL_CHAP_ID));
+						item.index = cursor.getInt(cursor.getColumnIndex(COL_CHAP_INDEX));
+						item.title = cursor.getString(cursor.getColumnIndex(COL_CHAP_TITLE));
+						if(cursor.getString(cursor.getColumnIndex(COL_CHAP_DOWNLOAD)).equals("1")){
+							item.downloaded = true;
+							items.add(item);
+						}
+						
+					} while (cursor.moveToNext());
+				}
+
+				cursor.close();
+				db.close();
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+
+		return items;
+	}
+	
+	public ArrayList<Chapter> getAllChapter(String bookId) {
+		bookId = getBookId(bookId);
+		
+//		Log.e(TAG, "getAllChapter "+PREFIX_TABLE+bookId);
 		
 		ArrayList<Chapter> items = new ArrayList<Chapter>();
 			try {
@@ -230,6 +265,37 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 			}
 
 		return items;
+	}
+	
+	
+	public void updateRowBookTable(String bookId, Chapter item){
+		bookId = getBookId(bookId);
+		ContentValues values = new ContentValues();
+		values.put(COL_CHAP_DOWNLOAD, "1");
+		try {
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.update((PREFIX_TABLE+bookId), values, COL_CHAP_ID + "=?", new String[] { item._id });
+			db.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		
+//		String bookId = getBookId(book._id);
+//		
+//		ContentValues values = new ContentValues();
+//		values.put(COL_CHAP_ID, item._id);
+//		values.put(COL_CHAP_TITLE, item.title);
+//		values.put(COL_CHAP_INDEX, item.index);
+//		values.put(COL_CHAP_DOWNLOAD, "0");
+//		try {
+//			SQLiteDatabase db = this.getWritableDatabase();
+//			db.insert((PREFIX_TABLE+bookId), null, values);
+//			db.close();
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//		}
 	}
 
 	
@@ -559,6 +625,40 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 		return items;
 	}
 
+	private void createDownloadedBookTable(SQLiteDatabase db) {
+		try {
+			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_DOWNLOADEDBOOK + " (" 
+					+ FAV_ID + " INTEGER PRIMARY KEY AUTOINCREMENT , " 
+					+ FAV_ID_TITLE + " TEXT , " 
+					+ FAV_TITLE + " TEXT , "
+					+ FAV_AUTHOR + " TEXT , " 
+					+ FAV_AVERAGE + " REAL , " 
+					+ FAV_DES + " TEXT , " 
+					+ FAV_LAST_CHAPTER + " REAL , " 
+					+ FAV_LAST_VOLUME + " REAL , " 
+					+ FAV_SAVE_TIME + " TEXT , " 
+					+ FAV_RATE_COUNT + " REAL , " 
+					+ FAV_SOURCE + " TEXT , " 
+					+ FAV_STATUS + " TEXT , " 
+					+ FAV_THUMB + " TEXT , " 
+					+ FAV_TOTAL_RATE + " REAL , " 
+					+ FAV_VIEW_COUNTER + " REAL)");
+//			db.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean existInDownloadedBookTable(String idTitle) {
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery("select 1 from " + TABLE_DOWNLOADEDBOOK + " where " + FAV_ID_TITLE + "= ? ", new String[] { idTitle});
+		boolean exists = (cursor.getCount() > 0);
+		cursor.close();
+		return exists;
+	} 
+	
 	private void createJustReadTable(SQLiteDatabase db) {
 		try {
 			db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_JUST_READ + " (" 
@@ -678,6 +778,44 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 		}
 	}
 	
+	public void addToDownloadedBook(Book item) {
+		
+		if(existInDownloadedBookTable(item._id)){
+			return;
+		}
+
+		ContentValues values = new ContentValues();
+		values.put(FAV_ID_TITLE, item._id);
+		values.put(FAV_AUTHOR, item.author);
+		values.put(FAV_AVERAGE, item.averateRate);
+		values.put(FAV_DES, item.shortDescription);
+		values.put(FAV_LAST_CHAPTER, item.lastChapter);
+		values.put(FAV_LAST_VOLUME, item.lastVolume);
+		values.put(FAV_RATE_COUNT, item.rateCounter);
+		values.put(FAV_SOURCE, item.source);
+		values.put(FAV_STATUS, item.status);
+		
+		Log.v(TAG, "addToDownloadedBook "+item.shortDescription);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		
+		values.put(FAV_SAVE_TIME, dateFormat.format(date));
+		values.put(FAV_THUMB, item.thumbnailUrl);
+		values.put(FAV_TITLE, item.title);
+		values.put(FAV_TOTAL_RATE, item.totalRate);
+		values.put(FAV_VIEW_COUNTER, item.viewCounter);
+		
+		try {
+			SQLiteDatabase db = this.getWritableDatabase();
+			db.insert(TABLE_DOWNLOADEDBOOK, null, values);
+			db.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
 	public void addToJustRead(Book item) {
 		
 		if(existInJustReadTable(item._id)){
@@ -736,6 +874,41 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+	}
+	
+	public Book getBookInDownloadedTable(String bookId){
+		try{
+			SQLiteDatabase db = this.getReadableDatabase();
+			Cursor cursor = db.rawQuery("select * from " + TABLE_DOWNLOADEDBOOK + " where " + FAV_ID_TITLE + "= ? ", new String[] { bookId});
+//			String selectQuery = "SELECT  * FROM " + TABLE_DOWNLOADEDBOOK + " WHERE "
+//					+ FAV_ID_TITLE + " = " + bookId;
+//			
+			Book item = new Book();
+//			Cursor cursor = db.rawQuery(selectQuery, new String[] {});
+			if (cursor != null && cursor.moveToFirst()) {
+				item._id = cursor.getString(cursor.getColumnIndex(FAV_ID_TITLE));
+				item.author = cursor.getString(cursor.getColumnIndex(FAV_AUTHOR));
+				item.averateRate = cursor.getDouble(cursor.getColumnIndex(FAV_AVERAGE));
+				item.lastChapter = cursor.getLong(cursor.getColumnIndex(FAV_LAST_CHAPTER));
+				item.lastVolume = cursor.getLong(cursor.getColumnIndex(FAV_LAST_VOLUME));
+				item.rateCounter = cursor.getLong(cursor.getColumnIndex(FAV_RATE_COUNT));
+				item.shortDescription = cursor.getString(cursor.getColumnIndex(FAV_DES));
+				item.source = cursor.getString(cursor.getColumnIndex(FAV_SOURCE));
+				item.status = cursor.getString(cursor.getColumnIndex(FAV_STATUS));
+				item.thumbnailUrl = cursor.getString(cursor.getColumnIndex(FAV_THUMB));
+				item.savedTime = cursor.getString(cursor.getColumnIndex(FAV_SAVE_TIME));
+				item.title = cursor.getString(cursor.getColumnIndex(FAV_TITLE));
+				item.totalRate = cursor.getLong(cursor.getColumnIndex(FAV_TOTAL_RATE));
+				item.viewCounter = cursor.getLong(cursor.getColumnIndex(FAV_VIEW_COUNTER));
+				
+			}
+			cursor.close();
+			db.close();
+			
+			return item;
+			
+		}catch(Exception e){}
+		    return null;
 	}
 
 	public ArrayList<Book> getAllBookInJustRead() {

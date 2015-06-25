@@ -49,9 +49,17 @@ public class IDownloader {
 	
 	private Chapter checkNextChapToDownload(){
 		
-		ArrayList<Chapter> allRow = getRealChapters();
-		//Log.e(TAG, "checkNextChapToDownload "+" "+allRow.size());
+//		ArrayList<Chapter> allRow = getRealChapters();
+//		//Log.e(TAG, "checkNextChapToDownload "+" "+allRow.size());
+//		
+//		for(int i = 0; i < allRow.size(); i++){
+//			if(!allRow.get(i).downloaded){
+//				return allRow.get(i);
+//			}
+//		}
 		
+		ArrayList<Chapter> allRow = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(bookID);
+		Log.e(TAG, "checkNextChapToDownload "+" "+allRow.size());
 		for(int i = 0; i < allRow.size(); i++){
 			if(!allRow.get(i).downloaded){
 				return allRow.get(i);
@@ -109,7 +117,8 @@ public class IDownloader {
 				callback.onProgress(chapIndex);
 				
 				KaraUtils.saveChapContent2SDCard(itemBook.title, itemBook._id, chapTitle, chapIndex+1, statusObj.chapter.content);
-				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTable(bookID, statusObj.chapter);
+				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).updateRowBookTable(bookID, statusObj.chapter);
+//				IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).addRowBookTable(bookID, statusObj.chapter);
 				download();
 			}
 

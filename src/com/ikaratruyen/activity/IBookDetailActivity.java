@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -56,6 +57,7 @@ import com.ikaratruyen.model.Book;
 import com.ikaratruyen.model.Chapter;
 import com.ikaratruyen.model.GetBookRequest;
 import com.ikaratruyen.model.GetBookResponse;
+import com.ikaratruyen.model.GetChapterResponse;
 import com.ikaratruyen.model.RateBookRequest;
 import com.ikaratruyen.model.RateBookResponse;
 import com.ikaratruyen.request.IGetBookRequest;
@@ -263,10 +265,25 @@ public class IBookDetailActivity extends Activity implements
 	private void getBookValue(final boolean begin){
 		
 		if(!KaraUtils.hasNetworkConnection(getApplicationContext())){
+			Book item = IKaraDbHelper.getInstance(getApplicationContext()).getBookInDownloadedTable(itemBook._id);
+			((TextView) findViewById(R.id.tv_description)).setText(item.shortDescription);
+			((TextView) findViewById(R.id.tv_description)).setBackgroundColor(Color.WHITE);
+			
+			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllDownloaedChapter(itemBook._id);
+			chapList = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
+			ISettings.getInstance().setChapListContents(chapList);
+			float percent = (float)downloadedRows.size()*100/chapList.size();
+			if(percent == 100){
+				butRead.setText(getResources().getString(R.string.title_read));
+			}
+			
+			barDownload.setProgress((int)percent);
+			
+			adapter = new ChapAdapter(getApplicationContext(), chapList);
+			listView.setAdapter(adapter);
 			
 			return;
 		}
-		
 		
 		GetBookRequest request = new GetBookRequest();
 		request.bookId = itemBook._id;
@@ -289,28 +306,33 @@ public class IBookDetailActivity extends Activity implements
 					((TextView) findViewById(R.id.tv_description)).setBackgroundColor(Color.WHITE);
 					chapList = statusObj.book.chapters;
 					
-					if(!IKaraDbHelper.getInstance(IBookDetailActivity.this).isTableExists(itemBook)){
-						IKaraDbHelper.getInstance(IBookDetailActivity.this).createBookTableFollowId(itemBook._id);
-					}
-					
 					for(int i = 0; i < chapList.size(); i++){
 						chapList.get(i).check = false;
 						chapList.get(i).index = i;
 					}
-					
-					adapter = new ChapAdapter(getApplicationContext(), chapList);
-					listView.setAdapter(adapter);
-					
 					ISettings.getInstance().setChapListContents(chapList);
-					
-					ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
-					
-					float percent = (float)downloadedRows.size()*100/chapList.size();
-					if(percent == 100){
-						butRead.setText(getResources().getString(R.string.title_read));
+					if(!IKaraDbHelper.getInstance(IBookDetailActivity.this).isTableExists(itemBook)){
+						new AddBookTask(new AddDBCallBack() {
+							
+							@Override
+							public void onSuccess() {
+								// TODO Auto-generated method stub
+								adapter = new ChapAdapter(getApplicationContext(), chapList);
+								listView.setAdapter(adapter);
+								
+								
+								ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllDownloaedChapter(itemBook._id);
+								
+								float percent = (float)downloadedRows.size()*100/chapList.size();
+								if(percent == 100){
+									butRead.setText(getResources().getString(R.string.title_read));
+								}
+								
+								barDownload.setProgress((int)percent);
+							}
+						}).execute();
 					}
 					
-					barDownload.setProgress((int)percent);
 				}
 			}
 
@@ -513,9 +535,9 @@ public class IBookDetailActivity extends Activity implements
 			
 		case R.id.but_read:
 			
-			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllChapter(itemBook._id);
+			ArrayList<Chapter> downloadedRows = IKaraDbHelper.getInstance(IApplication.getInstance().getApplicationContext()).getAllDownloaedChapter(itemBook._id);
 			Log.e(TAG, "Reader size "+downloadedRows.size()+" "+chapList.size());
-			if((downloadedRows.size() > 0 && isDownloading) || downloadedRows.size() == chapList.size()){
+			if((downloadedRows.size() > 0 && isDownloading) || downloadedRows.size() == chapList.size() || !KaraUtils.hasNetworkConnection(getApplicationContext())){
 				Intent intent = new Intent(getApplicationContext(), CoreReadActivity.class);
 				intent.putExtra("book_title", itemBook.title);
 				intent.putExtra("chap_id", chapList.get(0)._id);
@@ -548,6 +570,7 @@ public class IBookDetailActivity extends Activity implements
 		                }else if (item == 1){
 //		                	barDownload.setVisibility(View.VISIBLE);
 		                	
+		                	IKaraDbHelper.getInstance(getApplicationContext()).addToDownloadedBook(itemBook);
 		                	stopCurrectService();
 		                	
 		                	intent = new Intent(IBookDetailActivity.this, DownloadService.class);
@@ -657,5 +680,40 @@ public class IBookDetailActivity extends Activity implements
 		}
 	}
     
+    
+    private interface AddDBCallBack{
+    	public void onSuccess();
+    }
+    
+    private class AddBookTask extends AsyncTask<Void, Void, String>{
+    	
+    	private AddDBCallBack callback;
+    	public AddBookTask(AddDBCallBack callback){
+    		this.callback = callback;
+    	}
+    	
+		@Override
+		protected String doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			Log.i(TAG, "AddBookTask "+itemBook.shortDescription);
+//			if(!IKaraDbHelper.getInstance(IBookDetailActivity.this).isTableExists(itemBook)){
+				IKaraDbHelper.getInstance(IBookDetailActivity.this).createBookTableFollowId(itemBook._id);
+//			}
+			
+			for(int i = 0; i < chapList.size(); i++){
+				//IKaraDbHelper.getInstance(getApplicationContext()).addChapRowIntoBookTable(itemBook, chapList.get(i), i);
+				IKaraDbHelper.getInstance(getApplicationContext()).addRowBookTable(itemBook._id, chapList.get(i));
+			}
+			
+			return null;
+		}
+		
+		@Override
+	    protected void onPostExecute(String value) {
+			
+			callback.onSuccess();
+		}
+    	
+    }
     
 }

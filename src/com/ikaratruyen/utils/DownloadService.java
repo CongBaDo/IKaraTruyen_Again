@@ -65,29 +65,6 @@ public class DownloadService extends Service {
 		});
 		downloader.download();
 		
-//		new IGetBooksContentRequest(new IBookContentCallBack() {
-//			
-//			@Override
-//			public void onResultINewBookPostPost(GetBookContentResponse statusObj) {
-//				// TODO Auto-generated method stub
-//				Log.i(TAG, "BOOK CONTENT "+statusObj.book.chapters.get(0).content);
-//			}
-//			
-//			@Override
-//			public void fail() {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//			
-//			@Override
-//			public void onProgress(int progress) {
-//				Bundle bundle = new Bundle();
-//				bundle.putInt("progress", progress);
-//				resultReceiver.send(100, bundle);
-//				// TODO Auto-generated method stub
-//				//Log.i(TAG, "BOOK progress "+progress);
-//			}
-//		}, request).execute();
 		return START_STICKY;
 	}
 
