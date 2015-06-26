@@ -347,7 +347,7 @@ public class IMenuAdapter extends BaseAdapter implements OnCheckedChangeListener
 				holder2.imageView.setImageDrawable(data.get(position).draw);
 			}else{
 				
-				Log.v(Tag, "image "+data.get(position).thumbUrl+" "+data.get(position).id);
+//				Log.v(Tag, "image "+data.get(position).thumbUrl+" "+data.get(position).id);
 				ImageLoader.getInstance().displayImage(data.get(position).thumbUrl, holder2.imageView);
 			}
 			

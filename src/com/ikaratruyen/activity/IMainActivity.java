@@ -228,8 +228,8 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 					KeyEvent event) {
 				// TODO Auto-generated method stub
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					Log.v(TAG, "Search now ");
-					searchBook();
+					Log.v(TAG, "Search now "+query);
+					searchBaseOnTextInput(query);
 		            return true; 
 		        }
 				return false;
@@ -560,36 +560,39 @@ public class IMainActivity extends SlidingFragmentActivity implements OnItemClic
 				startActivity(intent);
 //			}
 		}else{
-			SearchBooksRequest request = new SearchBooksRequest();
-			request.keyword = searchDatas.get(position).title;
-			request.language = "vi";
-			
-			new ISearchBookRequest(new ISerchBookCallBack() {
-				
-				@Override
-				public void onSearchPost(SearchBooksResponse statusObj) {
-					// TODO Auto-generated method stub
-					Log.v(TAG, "onSearchPost" +statusObj.books.size());
-					bookList.clear();
-					adapter.addMore(statusObj.books, 20);
-					listView.resetLoading();
-					currentCursor = statusObj.cursor;
-					processListData();
-					listView.setAdapter(adapter);
-					adapter.notifyDataSetChanged();
-					hideKeyboard();
-					searchDatas.clear();
-					isFinishSearch = true;
-				}
-				
-				@Override
-				public void fail() {
-					// TODO Auto-generated method stub
-					
-				}
-			}, request).execute();
-			
+			searchBaseOnTextInput(searchDatas.get(position).title);
 		}
+	}
+	
+	private void searchBaseOnTextInput(String query){
+		SearchBooksRequest request = new SearchBooksRequest();
+		request.keyword = query;
+		request.language = "vi";
+		
+		new ISearchBookRequest(new ISerchBookCallBack() {
+			
+			@Override
+			public void onSearchPost(SearchBooksResponse statusObj) {
+				// TODO Auto-generated method stub
+				Log.v(TAG, "onSearchPost" +statusObj.books.size());
+				bookList.clear();
+				adapter.addMore(statusObj.books, 20);
+				listView.resetLoading();
+				currentCursor = statusObj.cursor;
+				processListData();
+				listView.setAdapter(adapter);
+				adapter.notifyDataSetChanged();
+				hideKeyboard();
+				searchDatas.clear();
+				isFinishSearch = true;
+			}
+			
+			@Override
+			public void fail() {
+				// TODO Auto-generated method stub
+				
+			}
+		}, request).execute();
 	}
 	
 	private INewBookPostCallBack newBookCallBack = new INewBookPostCallBack() {
