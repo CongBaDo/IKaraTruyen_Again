@@ -651,12 +651,16 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 	}
 	
 	public boolean existInDownloadedBookTable(String idTitle) {
+		try{
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery("select 1 from " + TABLE_DOWNLOADEDBOOK + " where " + FAV_ID_TITLE + "= ? ", new String[] { idTitle});
+			boolean exists = (cursor.getCount() > 0);
+			cursor.close();
+			return exists;
+		}catch(Exception e){}
 		
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery("select 1 from " + TABLE_DOWNLOADEDBOOK + " where " + FAV_ID_TITLE + "= ? ", new String[] { idTitle});
-		boolean exists = (cursor.getCount() > 0);
-		cursor.close();
-		return exists;
+		return false;
 	} 
 	
 	private void createJustReadTable(SQLiteDatabase db) {
@@ -686,38 +690,52 @@ public class IKaraDbHelper extends SQLiteOpenHelper {
 	
 	public boolean existInJustReadTable(String idTitle) {
 		
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery("select 1 from " + TABLE_JUST_READ + " where " + FAV_ID_TITLE + "= ? ", new String[] { idTitle});
-		boolean exists = (cursor.getCount() > 0);
-		cursor.close();
-		return exists;
+		try{
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery("select 1 from " + TABLE_JUST_READ + " where " + FAV_ID_TITLE + "= ? ", new String[] { idTitle});
+			boolean exists = (cursor.getCount() > 0);
+			cursor.close();
+			return exists;
+		}catch(Exception e){}
+		return false;
 	} 
 	
 	public boolean existInRatingTable(String bookId) {
 		
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery("select 1 from " + TABLE_RATING + " where " + RATING_BOOK_ID + "= ? ", new String[] { bookId});
-		boolean exists = (cursor.getCount() > 0);
-		cursor.close();
-		return exists;
+		try{
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery("select 1 from " + TABLE_RATING + " where " + RATING_BOOK_ID + "= ? ", new String[] { bookId});
+			boolean exists = (cursor.getCount() > 0);
+			cursor.close();
+			return exists;
+		}catch(Exception e){}
+		return false;
 	} 
 	
 	public boolean existInSavedTable(String bookId) {
-		
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery("select 1 from " + TABLE_SAVED_INDEX + " where " + SAVED_INDEX_BOOK_ID + "= ? ", new String[] { bookId});
-		boolean exists = (cursor.getCount() > 0);
-		cursor.close();
-		return exists;
+		try{
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery("select 1 from " + TABLE_SAVED_INDEX + " where " + SAVED_INDEX_BOOK_ID + "= ? ", new String[] { bookId});
+			boolean exists = (cursor.getCount() > 0);
+			cursor.close();
+			return exists;
+		}catch(Exception e){
+		}
+		return false;
 	} 
 	
 	public boolean existInVCTable(String bookId) {
+		try{
+			
+			SQLiteDatabase db = this.getWritableDatabase();
+			Cursor cursor = db.rawQuery("select 1 from " + TABLE_VIEW_COUNTER + " where " + VC_BOOK_ID + "= ? ", new String[] { bookId});
+			boolean exists = (cursor.getCount() > 0);
+			cursor.close();
+			return exists;
+		}catch(Exception e){}
 		
-		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery("select 1 from " + TABLE_VIEW_COUNTER + " where " + VC_BOOK_ID + "= ? ", new String[] { bookId});
-		boolean exists = (cursor.getCount() > 0);
-		cursor.close();
-		return exists;
+		return false;
 	} 
 	
 	public void addToRatingTable(String bookId) {
